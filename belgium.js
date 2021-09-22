@@ -51,6 +51,12 @@ class belgium extends Phaser.Scene {
 			{type: 'left', time: 55},
 			{type: 'left', time: 80}
 		];
+		
+		gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
+		gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
+		this.add.text(1245, 650, 'YOU');
+		gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
+		gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
 
 		// to optimize the notes, im rewriting the stuff from here...
 		//gameState.leftNotes = this.physics.add.group();
@@ -58,6 +64,7 @@ class belgium extends Phaser.Scene {
 		//gameState.upNotes = this.physics.add.group();
 		gameState.rightNotesB = this.physics.add.group();
 		gameState.rightNotesB.add(this.physics.add.sprite(800,-50,'right'));
+		console.log(gameState.rightNotesB.children.entries);
 		//
 		//
 		//to here this is all commented until its ready to implimented
@@ -67,9 +74,8 @@ class belgium extends Phaser.Scene {
 		gameState.hard = this.physics.add.sprite(800, 750, 'hard');
 
 		gameState.song = this.sound.add('Free Soul');
-		function noteCheck (direction) {
 
-		}
+		this.physics.add.overlap(sprite, group);
 	}
 
 	update() {
@@ -117,13 +123,6 @@ class belgium extends Phaser.Scene {
 				}
 			}
 		} else {
-			if (gameState.time == 0) {
-				gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
-				gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
-				this.add.text(1245, 650, 'YOU');
-				gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
-				gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
-			}
 
 			gameState.time = gameState.time + 1;
 
@@ -213,8 +212,12 @@ class belgium extends Phaser.Scene {
 //			}
 //		}
 //		
-//		
-//		for (i=0)
+//		if (gameState.cursors.left.isDown)
+//			for (i = 0; i < gameState.leftNotes.children.entries.length; i++) {
+//				if ((750 <= gameState.leftNotes.children.entries[i].y) && (gameState.leftNotes.children.entries[i].y <= 850)) {
+//					if (gameState.leftNotes.children.entries[i].texture.key != 'hold note' && !gameState.leftHit)
+//			}
+//		}
 
 			// left notes
 			if (gameState.cursors.left.isDown && (gameState.leftNotes[gameState.leftNoteNumber] != null)) {
@@ -330,9 +333,3 @@ class belgium extends Phaser.Scene {
     
 	}
 }
-
-
-
-
-
-// hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
