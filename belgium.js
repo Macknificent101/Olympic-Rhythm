@@ -52,24 +52,11 @@ class belgium extends Phaser.Scene {
 			{type: 'left', time: 80}
 		];
 
-		// to optimize the notes, im rewriting the stuff from here...
-		//gameState.leftNotes = this.physics.add.group();
-		//gameState.downNotes = this.physics.add.group();
-		//gameState.upNotes = this.physics.add.group();
-		gameState.rightNotesB = this.physics.add.group();
-		gameState.rightNotesB.add(this.physics.add.sprite(800,-50,'right'));
-		//
-		//
-		//to here this is all commented until its ready to implimented
-
 		gameState.easy = this.physics.add.sprite(800, 150, 'easy');
 		gameState.normal = this.physics.add.sprite(800, 450, 'normal');
 		gameState.hard = this.physics.add.sprite(800, 750, 'hard');
 
 		gameState.song = this.sound.add('Free Soul');
-		function noteCheck (direction) {
-
-		}
 	}
 
 	update() {
@@ -197,24 +184,6 @@ class belgium extends Phaser.Scene {
 					}
 				}
 			}
-
-			// testing new note procedures
-//		for (i = 0; i < gameState.map.length; i++) {
-//			if (gameState.map[i].time == gamestate.time) {
-//				if (gameState.map[i].type == 'left') {
-//					leftNotes.add(this.physics.add.sprite())
-//				} else if (gameState.map[i].type == 'down') {
-//
-//				} else if (gameState.map[i].type == 'up') {
-//
-//				} else if (gameState.map[i].type == 'right') {
-//
-//				}
-//			}
-//		}
-//		
-//		
-//		for (i=0)
 
 			// left notes
 			if (gameState.cursors.left.isDown && (gameState.leftNotes[gameState.leftNoteNumber] != null)) {
