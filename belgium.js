@@ -41,10 +41,10 @@ class belgium extends Phaser.Scene {
 		gameState.cursors = this.input.keyboard.createCursorKeys();
 
 		gameState.map = [
-			{type: 'left', time: 55},
-			{type: 'left', time: 80}
+			['left', 'player', 55],
+			['left', 'player', 80]
 		];
-		
+
 		gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
 		gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
 		this.add.text(1245, 650, 'YOU');
@@ -63,9 +63,48 @@ class belgium extends Phaser.Scene {
 
 		gameState.song = this.sound.add('Free Soul');
 
-		this.physics.add.overlap(gameState.pJudge, gameState.leftNotes, (line,note) => {
+		this.physics.add.overlap(gameState.pJudge, gameState.leftNotes, (line, note) => {
 			if (gameState.cursors.left.isDown) {
 				if (!gameState.leftHit && note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+			}
+		});
+		this.physics.add.overlap(gameState.pJudge, gameState.downNotes, (line, note) => {
+			if (gameState.cursors.down.isDown) {
+				if (!gameState.downHit && note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+			}
+		});
+		this.physics.add.overlap(gameState.pJudge, gameState.upNotes, (line, note) => {
+			if (gameState.cursors.up.isDown) {
+				if (!gameState.upHit && note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+			}
+		});
+		this.physics.add.overlap(gameState.pJudge, gameState.rightNotes, (line, note) => {
+			if (gameState.cursors.right.isDown) {
+				if (!gameState.rightHit && note.texture.key != 'hold') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -123,9 +162,6 @@ class belgium extends Phaser.Scene {
 				}
 			}
 		} else {
-
-			gameState.time = gameState.time + 1;
-
 			//score
 			gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
 
@@ -140,45 +176,61 @@ class belgium extends Phaser.Scene {
 
 			// new note spawning
 			for (gameState.i = 0; gameState.i < gameState.map.length; gameState.i++) {
-				if (gameState.map[gameState.i].time == gameState.time) {
-					if (gameState.map[gameState.i].type == 'left') {
-						gameState.leftNotes.add(this.physics.add.sprite(1060,-50,'left').setVelocityY(800));
-					} else if (gameState.map[gameState.i].type == 'down') {
-		
-					} else if (gameState.map[gameState.i].type == 'up') {
-		
-					} else if (gameState.map[gameState.i].type == 'right') {
-		
+				if (gameState.map[gameState.i][2] == gameState.time) {
+					if (gameState.map[gameState.i][1] == 'player') {
+						if (gameState.map[gameState.i][0] == 'left') {
+							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+							gameState.leftNotes.setVelocityY(800);
+						} else if (gameState.map[gameState.i][0] == 'down') {
+							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+							gameState.downNotes.setVelocityY(800);
+						} else if (gameState.map[gameState.i][0] == 'up') {
+							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+							gameState.upNotes.setVelocityY(800);
+						} else if (gameState.map[gameState.i][0] == 'right') {
+							gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
+							gameState.rightNotes.setVelocityY(800);
+						}
+					}
+				}
+			}
+			gameState.time = gameState.time + 1;
+
+			// missed note deletion
+			for (gameState.i = 0; gameState.i < gameState.enemyNotes.length; gameState.i++) {
+				if (gameState.enemyNotes[i] != null) {
+					if (gameState.enemyNotes[i].y >= 800) {
+						gameState.enemyNotes[i].destroy();
 					}
 				}
 			}
 
 			//resetting the 'hit' values (used to prevent holding from giving 100%)
-			if (!gameState.cursors.left.isDown){
+			if (!gameState.cursors.left.isDown) {
 				gameState.leftHit = false;
 			}
-			if (!gameState.cursors.down.isDown){
+			if (!gameState.cursors.down.isDown) {
 				gameState.downHit = false;
 			}
-			if (!gameState.cursors.up.isDown){
+			if (!gameState.cursors.up.isDown) {
 				gameState.upHit = false;
 			}
-			if (!gameState.cursors.right.isDown){
+			if (!gameState.cursors.right.isDown) {
 				gameState.rightHit = false;
 			}
 
 			//character sprite things
-			if (gameState.cursors.left.isDown){
-				
-			}
-			if (gameState.cursors.up.isDown){
+			if (gameState.cursors.left.isDown) {
 
 			}
-			if (gameState.cursors.right.isDown){
+			if (gameState.cursors.up.isDown) {
 
 			}
-			if (gameState.cursors.down.isDown){
-				
+			if (gameState.cursors.right.isDown) {
+
+			}
+			if (gameState.cursors.down.isDown) {
+
 			}
 		}
 	}
