@@ -37,13 +37,9 @@ class belgium extends Phaser.Scene {
 		gameState.noteCount = 0;
 		gameState.enemyNotes = [];
 		gameState.scoreBoard = this.add.text(700, 100, ((gameState.points * 10) / (gameState.noteCount) | 0) + '%', { fill: 'Number000000', fontSize: '20px' });
+		gameState.musicTime = 55;
 
 		gameState.cursors = this.input.keyboard.createCursorKeys();
-
-		gameState.map = [
-			['left', 'player', 55],
-			['left', 'player', 80]
-		];
 
 		gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
 		gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
@@ -51,25 +47,34 @@ class belgium extends Phaser.Scene {
 		gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
 		gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
 
+		gameState.belowScreen = this.physics.add.sprite(1250, 1000, 'judge');// below the screen, used to delete missed notes
+
 		//to optimize the notes, im rewriting the stuff from here...
 		gameState.leftNotes = this.physics.add.group();
 		gameState.downNotes = this.physics.add.group();
 		gameState.upNotes = this.physics.add.group();
 		gameState.rightNotes = this.physics.add.group();
 
-		gameState.easy = this.physics.add.sprite(800, 150, 'easy');
-		gameState.normal = this.physics.add.sprite(800, 450, 'normal');
-		gameState.hard = this.physics.add.sprite(800, 750, 'hard');
+		gameState.easy = this.physics.add.sprite(800, 150, 'easy'); //sprite to select easy mode
+		gameState.normal = this.physics.add.sprite(800, 450, 'normal'); //normal
+		gameState.hard = this.physics.add.sprite(800, 750, 'hard'); //hard
 
 		gameState.song = this.sound.add('Free Soul');
 
+		//map of the notes, including enemy but those are not added yet.
+		gameState.map = [
+			['left', 'player', 55],
+			['left', 'player', 80]
+		];
+
+		//this is for scoring notes
 		this.physics.add.overlap(gameState.pJudge, gameState.leftNotes, (line, note) => {
-			if (gameState.cursors.left.isDown) {
-				if (!gameState.leftHit && note.texture.key != 'hold') {
+			if (gameState.cursors.left.isDown) { //if the left button is down
+				if (!gameState.leftHit && note.texture.key != 'hold note') { //then we check if its a hold note, and aslong as it isnt we make sure the button isnt being held
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold') {
+				} else if (note.texture.key == 'hold note') { //if it is a hold note dont check if it is held
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -78,11 +83,11 @@ class belgium extends Phaser.Scene {
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.downNotes, (line, note) => {
 			if (gameState.cursors.down.isDown) {
-				if (!gameState.downHit && note.texture.key != 'hold') {
+				if (!gameState.downHit && note.texture.key != 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold') {
+				} else if (note.texture.key != 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -91,11 +96,11 @@ class belgium extends Phaser.Scene {
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.upNotes, (line, note) => {
 			if (gameState.cursors.up.isDown) {
-				if (!gameState.upHit && note.texture.key != 'hold') {
+				if (!gameState.upHit && note.texture.key != 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold') {
+				} else if (note.texture.key != 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -104,16 +109,46 @@ class belgium extends Phaser.Scene {
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.rightNotes, (line, note) => {
 			if (gameState.cursors.right.isDown) {
-				if (!gameState.rightHit && note.texture.key != 'hold') {
+				if (!gameState.rightHit && note.texture.key != 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold') {
+				} else if (note.texture.key != 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
 				}
 			}
+		});
+
+		// this is how we delete notes
+		this.physics.add.overlap(gameState.belowScreen, gameState.leftNotes, (line,note) => {
+			if (note.texture.key = 'hold note') {
+				gameState.points = gameState.points + 9;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.downNotes, (line,note) => {
+			if (note.texture.key = 'hold note') {
+				gameState.points = gameState.points + 9;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.upNotes, (line,note) => {
+			if (note.texture.key = 'hold note') {
+				gameState.points = gameState.points + 9;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.rightNotes, (line,note) => {
+			if (note.texture.key = 'hold note') {
+				gameState.points = gameState.points + 9;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
 		});
 	}
 
@@ -165,8 +200,12 @@ class belgium extends Phaser.Scene {
 			//score
 			gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
 
+			//starting the music at the right time
+			if (gameState.time == gameState.musicTime) {
+				gameState.song.start();
+			}
 			//enemy notes
-			for (gameState.i = 0; gameState.i < gameState.enemyNotes.length; gameState.i++) {
+			for (var i = 0; i < gameState.enemyNotes.length; i++) {
 				if (gameState.enemyNotes[i] != null) {
 					if (gameState.enemyNotes[i].y >= 800) {
 						gameState.enemyNotes[i].destroy();
@@ -175,19 +214,19 @@ class belgium extends Phaser.Scene {
 			}
 
 			// new note spawning
-			for (gameState.i = 0; gameState.i < gameState.map.length; gameState.i++) {
-				if (gameState.map[gameState.i][2] == gameState.time) {
-					if (gameState.map[gameState.i][1] == 'player') {
-						if (gameState.map[gameState.i][0] == 'left') {
+			for (var i = 0; i < gameState.map.length; i++) {
+				if (gameState.map[i][2] == gameState.time) {
+					if (gameState.map[i][1] == 'player') {
+						if (gameState.map[i][0] == 'left') {
 							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
 							gameState.leftNotes.setVelocityY(800);
-						} else if (gameState.map[gameState.i][0] == 'down') {
+						} else if (gameState.map[i][0] == 'down') {
 							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
 							gameState.downNotes.setVelocityY(800);
-						} else if (gameState.map[gameState.i][0] == 'up') {
+						} else if (gameState.map[i][0] == 'up') {
 							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
 							gameState.upNotes.setVelocityY(800);
-						} else if (gameState.map[gameState.i][0] == 'right') {
+						} else if (gameState.map[i][0] == 'right') {
 							gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
 							gameState.rightNotes.setVelocityY(800);
 						}
@@ -195,15 +234,6 @@ class belgium extends Phaser.Scene {
 				}
 			}
 			gameState.time = gameState.time + 1;
-
-			// missed note deletion
-			for (gameState.i = 0; gameState.i < gameState.enemyNotes.length; gameState.i++) {
-				if (gameState.enemyNotes[i] != null) {
-					if (gameState.enemyNotes[i].y >= 800) {
-						gameState.enemyNotes[i].destroy();
-					}
-				}
-			}
 
 			//resetting the 'hit' values (used to prevent holding from giving 100%)
 			if (!gameState.cursors.left.isDown) {
