@@ -1,4 +1,3 @@
-
 class belgium extends Phaser.Scene {
 	constructor() {
 		super({ key: 'belgium' });
@@ -30,33 +29,126 @@ class belgium extends Phaser.Scene {
 		gameState.points = 0;
 		gameState.time = 0;
 		gameState.timeout = 0;
-		gameState.leftNotes = [];
-		gameState.leftNoteNumber = 0;
 		gameState.leftHit = false;
-		gameState.downNotes = [];
-		gameState.downNoteNumber = 0;
 		gameState.downHit = false;
-		gameState.upNotes = [];
-		gameState.upNoteNumber = 0;
 		gameState.upHit = false;
-		gameState.rightNotes = [];
-		gameState.rightNoteNumber = 0;
 		gameState.rightHit = false;
+		gameState.noteCount = 0;
 		gameState.enemyNotes = [];
-		gameState.scoreBoard = this.add.text(700, 100, ((gameState.points * 10) / (gameState.leftNoteNumber + gameState.upNoteNumber + gameState.downNoteNumber + gameState.rightNoteNumber) | 0) + '%', { fill: 'Number000000', fontSize: '20px' });
+		gameState.scoreBoard = this.add.text(700, 100, ((gameState.points * 10) / (gameState.noteCount) | 0) + '%', { fill: 'Number000000', fontSize: '20px' });
+		gameState.musicTime = 55;
 
 		gameState.cursors = this.input.keyboard.createCursorKeys();
 
-		gameState.map = [
-			{type: 'left', time: 55},
-			{type: 'left', time: 80}
-		];
+		gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
+		gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
+		this.add.text(1245, 650, 'YOU');
+		gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
+		gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
 
-		gameState.easy = this.physics.add.sprite(800, 150, 'easy');
-		gameState.normal = this.physics.add.sprite(800, 450, 'normal');
-		gameState.hard = this.physics.add.sprite(800, 750, 'hard');
+		gameState.belowScreen = this.physics.add.sprite(1250, 1000, 'judge');// below the screen, used to delete missed notes
+
+		//to optimize the notes, im rewriting the stuff from here...
+		gameState.leftNotes = this.physics.add.group();
+		gameState.downNotes = this.physics.add.group();
+		gameState.upNotes = this.physics.add.group();
+		gameState.rightNotes = this.physics.add.group();
+
+		gameState.easy = this.physics.add.sprite(800, 150, 'easy'); //sprite to select easy mode
+		gameState.normal = this.physics.add.sprite(800, 450, 'normal'); //normal
+		gameState.hard = this.physics.add.sprite(800, 750, 'hard'); //hard
 
 		gameState.song = this.sound.add('Free Soul');
+
+		//map of the notes, including enemy but those are not added yet.
+		gameState.map = [
+			['left', 'player', 55],
+			['left', 'player', 80]
+		];
+
+		//this is for scoring notes
+		this.physics.add.overlap(gameState.pJudge, gameState.leftNotes, (line, note) => {
+			if (gameState.cursors.left.isDown) { //if the left button is down
+				if (!gameState.leftHit && note.texture.key != 'hold note') { //then we check if its a hold note, and aslong as it isnt we make sure the button isnt being held
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key == 'hold note') { //if it is a hold note dont check if it is held
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+			}
+		});
+		this.physics.add.overlap(gameState.pJudge, gameState.downNotes, (line, note) => {
+			if (gameState.cursors.down.isDown) {
+				if (!gameState.downHit && note.texture.key != 'hold note') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key != 'hold note') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+			}
+		});
+		this.physics.add.overlap(gameState.pJudge, gameState.upNotes, (line, note) => {
+			if (gameState.cursors.up.isDown) {
+				if (!gameState.upHit && note.texture.key != 'hold note') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key != 'hold note') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+			}
+		});
+		this.physics.add.overlap(gameState.pJudge, gameState.rightNotes, (line, note) => {
+			if (gameState.cursors.right.isDown) {
+				if (!gameState.rightHit && note.texture.key != 'hold note') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key != 'hold note') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+			}
+		});
+
+		// this is how we delete notes
+		this.physics.add.overlap(gameState.belowScreen, gameState.leftNotes, (line,note) => {
+			if (note.texture.key = 'hold note') {
+				gameState.points = gameState.points + 9;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.downNotes, (line,note) => {
+			if (note.texture.key = 'hold note') {
+				gameState.points = gameState.points + 9;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.upNotes, (line,note) => {
+			if (note.texture.key = 'hold note') {
+				gameState.points = gameState.points + 9;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.rightNotes, (line,note) => {
+			if (note.texture.key = 'hold note') {
+				gameState.points = gameState.points + 9;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
 	}
 
 	update() {
@@ -104,80 +196,15 @@ class belgium extends Phaser.Scene {
 				}
 			}
 		} else {
-			if (gameState.time == 0) {
-				gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
-				gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
-				this.add.text(1245, 650, 'YOU');
-				gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
-				gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
-			}
-
-			gameState.time = gameState.time + 1;
-
-			// note spawning (mapping)
-			if (true) {
-				if (gameState.time == 10) {
-					gameState.song.play();
-				} else if (gameState.time == 55) {
-					gameState.leftNotes.push(this.physics.add.sprite(1060, 10, 'left').setVelocityY(800));
-				} else if (gameState.time == 80) {
-					gameState.leftNotes.push(this.physics.add.sprite(1060, 10, 'left').setVelocityY(800));
-				} else if (gameState.time == 105) {
-					gameState.leftNotes.push(this.physics.add.sprite(1060, 10, 'left').setVelocityY(800));
-				} else if (gameState.time == 130) {
-					gameState.leftNotes.push(this.physics.add.sprite(1060, 10, 'left').setVelocityY(800));
-				} else if (gameState.time == 155) {
-					gameState.leftNotes.push(this.physics.add.sprite(1060, 10, 'left').setVelocityY(800));
-				} else if (gameState.time == 170) {
-					gameState.leftNotes.push(this.physics.add.sprite(1060, 10, 'left').setVelocityY(800));
-				} else if (gameState.time == 190) {
-					gameState.rightNotes.push(this.physics.add.sprite(1438, 10, 'right').setVelocityY(800));
-				} else if (gameState.time == 215) {
-					gameState.rightNotes.push(this.physics.add.sprite(1438, 10, 'right').setVelocityY(800));
-				} else if (gameState.time == 240) {
-					gameState.rightNotes.push(this.physics.add.sprite(1438, 10, 'right').setVelocityY(800));
-				} else if (gameState.time == 265) {
-					gameState.rightNotes.push(this.physics.add.sprite(1438, 10, 'right').setVelocityY(800));
-				} else if (gameState.time == 290) {
-					gameState.rightNotes.push(this.physics.add.sprite(1438, 10, 'right').setVelocityY(800));
-				} else if (gameState.time == 305) {
-					gameState.rightNotes.push(this.physics.add.sprite(1438, 10, 'right').setVelocityY(800));
-				} else if (gameState.time == 317) {
-					gameState.downNotes.push(this.physics.add.sprite(1186, 10, 'down').setVelocityY(800));
-				} else if (gameState.time == 342) {
-					gameState.downNotes.push(this.physics.add.sprite(1186, 10, 'down').setVelocityY(800));
-				} else if (gameState.time == 367) {
-					gameState.downNotes.push(this.physics.add.sprite(1186, 10, 'down').setVelocityY(800));
-				} else if (gameState.time == 392) {
-					gameState.downNotes.push(this.physics.add.sprite(1186, 10, 'down').setVelocityY(800));
-				} else if (gameState.time == 417) {
-					gameState.downNotes.push(this.physics.add.sprite(1186, 10, 'down').setVelocityY(800));
-				} else if (gameState.time == 432) {
-					gameState.downNotes.push(this.physics.add.sprite(1186, 10, 'down').setVelocityY(800));
-				} else if (gameState.time == 445) {
-					gameState.upNotes.push(this.physics.add.sprite(1304, 10, 'up').setVelocityY(800));
-				} else if (gameState.time == 470) {
-					gameState.upNotes.push(this.physics.add.sprite(1304, 10, 'up').setVelocityY(800));
-				} else if (gameState.time == 495) {
-					gameState.upNotes.push(this.physics.add.sprite(1304, 10, 'up').setVelocityY(800));
-				} else if (gameState.time == 520) {
-					gameState.upNotes.push(this.physics.add.sprite(1304, 10, 'up').setVelocityY(800));
-				} else if (gameState.time == 545) {
-					gameState.upNotes.push(this.physics.add.sprite(1304, 10, 'up').setVelocityY(800));
-				} else if (gameState.time == 555) {
-					gameState.upNotes.push(this.physics.add.sprite(1304, 10, 'up').setVelocityY(800));
-				} else if (gameState.time == 1000) {
-					gameState.song.stop();
-					this.scene.stop('belgium');
-					this.scene.start('title');
-				}
-			}
-
 			//score
-			gameState.scoreBoard.text = (gameState.points * 10) / (gameState.leftNoteNumber + gameState.upNoteNumber + gameState.downNoteNumber + gameState.rightNoteNumber) + '%';
+			gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
 
+			//starting the music at the right time
+			if (gameState.time == gameState.musicTime) {
+				gameState.song.start();
+			}
 			//enemy notes
-			for (gameState.i = 0; gameState.i < gameState.enemyNotes.length; gameState.i++) {
+			for (var i = 0; i < gameState.enemyNotes.length; i++) {
 				if (gameState.enemyNotes[i] != null) {
 					if (gameState.enemyNotes[i].y >= 800) {
 						gameState.enemyNotes[i].destroy();
@@ -185,117 +212,55 @@ class belgium extends Phaser.Scene {
 				}
 			}
 
-			// left notes
-			if (gameState.cursors.left.isDown && (gameState.leftNotes[gameState.leftNoteNumber] != null)) {
-				// note stuffs
-				if ((750 <= gameState.leftNotes[gameState.leftNoteNumber].y) && (gameState.leftNotes[gameState.leftNoteNumber].y <= 850)) {
-					if (gameState.leftNotes[gameState.leftNoteNumber].texture.key != 'hold note' && !gameState.leftHit){
-						gameState.leftNotes[gameState.leftNoteNumber].destroy();
-						gameState.leftNoteNumber = gameState.leftNoteNumber + 1;
-						gameState.points = gameState.points + 10;
-						gameState.leftHit = true;
-					} else if (gameState.leftNotes[gameState.leftNoteNumber].texture.key == 'hold note') {
-						gameState.leftNotes[gameState.leftNoteNumber].destroy();
-						gameState.leftNoteNumber = gameState.leftNoteNumber + 1;
-						gameState.points = gameState.points + 10;
+			// new note spawning
+			for (var i = 0; i < gameState.map.length; i++) {
+				if (gameState.map[i][2] == gameState.time) {
+					if (gameState.map[i][1] == 'player') {
+						if (gameState.map[i][0] == 'left') {
+							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+							gameState.leftNotes.setVelocityY(800);
+						} else if (gameState.map[i][0] == 'down') {
+							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+							gameState.downNotes.setVelocityY(800);
+						} else if (gameState.map[i][0] == 'up') {
+							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+							gameState.upNotes.setVelocityY(800);
+						} else if (gameState.map[i][0] == 'right') {
+							gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
+							gameState.rightNotes.setVelocityY(800);
+						}
 					}
 				}
 			}
-			if (gameState.leftNotes[gameState.leftNoteNumber] != null) {
-				if (900 <= gameState.leftNotes[gameState.leftNoteNumber].y) {
-					if (gameState.leftNotes[gameState.leftNoteNumber].texture.key == 'hold note') {
-						gameState.points = gameState.points + 9;
-					}
-					gameState.leftNotes[gameState.leftNoteNumber].destroy();
-					gameState.leftNoteNumber = gameState.leftNoteNumber + 1;
-				}
+			gameState.time = gameState.time + 1;
+
+			//resetting the 'hit' values (used to prevent holding from giving 100%)
+			if (!gameState.cursors.left.isDown) {
+				gameState.leftHit = false;
+			}
+			if (!gameState.cursors.down.isDown) {
+				gameState.downHit = false;
+			}
+			if (!gameState.cursors.up.isDown) {
+				gameState.upHit = false;
+			}
+			if (!gameState.cursors.right.isDown) {
+				gameState.rightHit = false;
 			}
 
-			// down notes
-			if (gameState.cursors.down.isDown && (gameState.downNotes[gameState.downNoteNumber] != null)) {
-				// note stuffs
-				if ((750 <= gameState.downNotes[gameState.downNoteNumber].y) && (gameState.downNotes[gameState.downNoteNumber].y <= 850)) {
-					gameState.downNotes[gameState.downNoteNumber].destroy();
-					gameState.downNoteNumber = gameState.downNoteNumber + 1;
-					gameState.points = gameState.points + 10;
-				}
-			}
-			if (gameState.downNotes[gameState.downNoteNumber] != null) {
-				if (900 <= gameState.downNotes[gameState.downNoteNumber].y) {
-					if (gameState.downNotes[gameState.downNoteNumber].texture.key == 'hold note') {
-						gameState.points = gameState.points + 9;
-					}
-					gameState.downNotes[gameState.downNoteNumber].destroy();
-					gameState.downNoteNumber = gameState.downNoteNumber + 1;
-				}
-			}
+			//character sprite things
+			if (gameState.cursors.left.isDown) {
 
-			// up notes
-			if (gameState.cursors.up.isDown && (gameState.upNotes[gameState.upNoteNumber] != null)) {
-				// note stuffs
-				if ((750 <= gameState.upNotes[gameState.upNoteNumber].y) && (gameState.upNotes[gameState.upNoteNumber].y <= 850)) {
-					gameState.upNotes[gameState.upNoteNumber].destroy();
-					gameState.upNoteNumber = gameState.upNoteNumber + 1;
-					gameState.points = gameState.points + 10;
-				}
 			}
-			if (gameState.upNotes[gameState.upNoteNumber] != null) {
-				if (900 <= gameState.upNotes[gameState.upNoteNumber].y) {
-					if (gameState.upNotes[gameState.upNoteNumber].texture.key == 'hold note') {
-						gameState.points = gameState.points + 9;
-					}
-					gameState.upNotes[gameState.upNoteNumber].destroy();
-					gameState.upNoteNumber = gameState.upNoteNumber + 1;
-				}
-			}
+			if (gameState.cursors.up.isDown) {
 
-			// right notes
-			if (gameState.cursors.right.isDown && (gameState.rightNotes[gameState.rightNoteNumber] != null)) {
-				// note stuffs
-				if ((750 <= gameState.rightNotes[gameState.rightNoteNumber].y) && (gameState.rightNotes[gameState.rightNoteNumber].y <= 850)) {
-					gameState.rightNotes[gameState.rightNoteNumber].destroy();
-					gameState.rightNoteNumber = gameState.rightNoteNumber + 1;
-					gameState.points = gameState.points + 10;
-				}
 			}
-			if (gameState.rightNotes[gameState.rightNoteNumber] != null) {
-				if (900 <= gameState.rightNotes[gameState.rightNoteNumber].y) {
-					if (gameState.rightNotes[gameState.rightNoteNumber].texture.key == 'hold note') {
-						gameState.points = gameState.points + 9;
-					}
-					gameState.rightNotes[gameState.rightNoteNumber].destroy();
-					gameState.rightNoteNumber = gameState.rightNoteNumber + 1;
-				}
+			if (gameState.cursors.right.isDown) {
+
+			}
+			if (gameState.cursors.down.isDown) {
+
 			}
 		}
-
-		//resetting the 'hit' values (used to prevent holding from giving 100%)
-		if (!gameState.cursors.left.isDown){
-			gameState.leftHit = false;
-		}
-    if (!gameState.cursors.down.isDown){
-			gameState.downHit = false;
-		}
-    if (!gameState.cursors.up.isDown){
-			gameState.upHit = false;
-		}
-    if (!gameState.cursors.right.isDown){
-			gameState.rightHit = false;
-		}
-
-		//character sprite things
-    if (gameState.cursors.left.isDown){
-      
-    }
-    if (gameState.cursors.up.isDown){
-
-    }
-    if (gameState.cursors.right.isDown){
-
-    }
-    if (gameState.cursors.down.isDown){
-      
-    }
-    
 	}
 }
