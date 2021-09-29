@@ -62,6 +62,7 @@ class belgium extends Phaser.Scene {
 
 		//map of the notes, including enemy but those are not added yet.
 		gameState.map = [
+		//[direction,enemy or player, time it spawns]
 			['left', 'player', 55],
 			['left', 'player', 80]
 		];
