@@ -22,8 +22,12 @@ class belgium extends Phaser.Scene {
 	}
 
 	create() {
+		//making the background
 		gameState.background = this.physics.add.sprite(800, 450, 'background');
 
+		//most of the boolean/numerical varibles used in the program
+		gameState.enemyDestroyHeight = 800;
+		gameState.scrollSpeed = 800;
 		gameState.selection = 1;
 		gameState.difficulty = 0;
 		gameState.points = 0;
@@ -38,8 +42,10 @@ class belgium extends Phaser.Scene {
 		gameState.scoreBoard = this.add.text(700, 100, ((gameState.points * 10) / (gameState.noteCount) | 0) + '%', { fill: 'Number000000', fontSize: '20px' });
 		gameState.musicTime = 55;
 
+		//cursor keys pog
 		gameState.cursors = this.input.keyboard.createCursorKeys();
 
+		//onscreen elements, like characters
 		gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
 		gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
 		this.add.text(1245, 650, 'YOU');
@@ -48,7 +54,7 @@ class belgium extends Phaser.Scene {
 
 		gameState.belowScreen = this.physics.add.sprite(1250, 1000, 'judge');// below the screen, used to delete missed notes
 
-		//to optimize the notes, im rewriting the stuff from here...
+		//gtoups of types of player notes
 		gameState.leftNotes = this.physics.add.group();
 		gameState.downNotes = this.physics.add.group();
 		gameState.upNotes = this.physics.add.group();
@@ -62,9 +68,8 @@ class belgium extends Phaser.Scene {
 
 		//map of the notes, including enemy but those are not added yet.
 		gameState.map = [
-		//[direction,enemy or player, time it spawns]
-			['left', 'player', 55],
-			['left', 'player', 80]
+			{type:'left', team:'player', time:55},
+			{type:'left', team:'player', time:80}
 		];
 
 		//this is for scoring notes
@@ -202,12 +207,13 @@ class belgium extends Phaser.Scene {
 
 			//starting the music at the right time
 			if (gameState.time == gameState.musicTime) {
-				gameState.song.start();
+				gameState.song.play();
 			}
+
 			//enemy notes
 			for (var i = 0; i < gameState.enemyNotes.length; i++) {
 				if (gameState.enemyNotes[i] != null) {
-					if (gameState.enemyNotes[i].y >= 800) {
+					if (gameState.enemyNotes[i].y >= gameState.enemyDestroyHeight) {
 						gameState.enemyNotes[i].destroy();
 					}
 				}
@@ -215,20 +221,20 @@ class belgium extends Phaser.Scene {
 
 			// new note spawning
 			for (var i = 0; i < gameState.map.length; i++) {
-				if (gameState.map[i][2] == gameState.time) {
-					if (gameState.map[i][1] == 'player') {
-						if (gameState.map[i][0] == 'left') {
+				if (gameState.map[i].time == gameState.time) {
+					if (gameState.map[i].team == 'player') {
+						if (gameState.map[i].type == 'left') {
 							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
-							gameState.leftNotes.setVelocityY(800);
-						} else if (gameState.map[i][0] == 'down') {
+							gameState.leftNotes.setVelocityY(gameState.scrollSpeed);
+						} else if (gameState.map[i].type == 'down') {
 							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
-							gameState.downNotes.setVelocityY(800);
-						} else if (gameState.map[i][0] == 'up') {
+							gameState.downNotes.setVelocityY(gameState.scrollSpeed);
+						} else if (gameState.map[i].type == 'up') {
 							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
-							gameState.upNotes.setVelocityY(800);
-						} else if (gameState.map[i][0] == 'right') {
+							gameState.upNotes.setVelocityY(gameState.scrollSpeed);
+						} else if (gameState.map[i].type == 'right') {
 							gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
-							gameState.rightNotes.setVelocityY(800);
+							gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
 						}
 					}
 				}
