@@ -255,7 +255,7 @@ class belgium extends Phaser.Scene {
 				gameState.rightHit = false;
 			}
 
-			//character sprite things
+			//character sprite things (work on this)
 			if (gameState.cursors.left.isDown) {
 
 			}
