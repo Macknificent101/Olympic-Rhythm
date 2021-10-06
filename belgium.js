@@ -29,7 +29,6 @@ class belgium extends Phaser.Scene {
 		gameState.enemyDestroyHeight = 800;
 		gameState.scrollSpeed = 800;
 		gameState.selection = 1;
-		gameState.difficulty = 0;
 		gameState.points = 0;
 		gameState.time = 0;
 		gameState.timeout = 0;
@@ -92,7 +91,7 @@ class belgium extends Phaser.Scene {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold note') {
+				} else if (note.texture.key == 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -105,7 +104,7 @@ class belgium extends Phaser.Scene {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold note') {
+				} else if (note.texture.key == 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -118,7 +117,7 @@ class belgium extends Phaser.Scene {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold note') {
+				} else if (note.texture.key == 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -128,28 +127,28 @@ class belgium extends Phaser.Scene {
 
 		// this is how we delete notes
 		this.physics.add.overlap(gameState.belowScreen, gameState.leftNotes, (line,note) => {
-			if (note.texture.key = 'hold note') {
+			if (note.texture.key == 'hold note') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount = gameState.noteCount + 1;
 			note.destroy();
 		});
 		this.physics.add.overlap(gameState.belowScreen, gameState.downNotes, (line,note) => {
-			if (note.texture.key = 'hold note') {
+			if (note.texture.key == 'hold note') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount = gameState.noteCount + 1;
 			note.destroy();
 		});
 		this.physics.add.overlap(gameState.belowScreen, gameState.upNotes, (line,note) => {
-			if (note.texture.key = 'hold note') {
+			if (note.texture.key == 'hold note') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount = gameState.noteCount + 1;
 			note.destroy();
 		});
 		this.physics.add.overlap(gameState.belowScreen, gameState.rightNotes, (line,note) => {
-			if (note.texture.key = 'hold note') {
+			if (note.texture.key == 'hold note') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount = gameState.noteCount + 1;
@@ -158,116 +157,71 @@ class belgium extends Phaser.Scene {
 	}
 
 	update() {
-		if (gameState.difficulty == 0) {
-			gameState.timeout = gameState.timeout + 1;
-			if (gameState.cursors.down.isDown && gameState.timeout > 10) {
-				gameState.selection = gameState.selection + 1;
-				gameState.timeout = 0;
-			} else if (gameState.cursors.up.isDown && gameState.timeout > 10) {
-				gameState.selection = gameState.selection - 1;
-				gameState.timeout = 0;
-			}
-			if (gameState.selection < 0) {
-				gameState.selection = 0;
-			} else if (gameState.selection > 2) {
-				gameState.selection = 2;
-			}
-			if (gameState.cursors.left.isDown) {
-				this.scene.stop('belgium');
-				this.scene.start('mainMenu');
-			}
-			if (gameState.selection == 0) { // on-screen selection
-				gameState.easy.setTexture('easy select');
-				gameState.normal.setTexture('normal');
-				gameState.hard.setTexture('hard');
-			} else if (gameState.selection == 1) {
-				gameState.easy.setTexture('easy');
-				gameState.normal.setTexture('normal select');
-				gameState.hard.setTexture('hard');
-			} else if (gameState.selection == 2) {
-				gameState.easy.setTexture('easy');
-				gameState.normal.setTexture('normal');
-				gameState.hard.setTexture('hard select');
-			}
-			if (gameState.cursors.right.isDown && gameState.timeout > 10) {
-				if (gameState.selection == 0) {
-					gameState.difficulty = 0;
-				} else if (gameState.selection == 1) {
-					gameState.difficulty = 20;
-					gameState.easy.destroy();
-					gameState.normal.destroy();
-					gameState.hard.destroy();
-				} else if (gameState.selection == 2) {
-					gameState.difficulty = 0;
+		//score
+		gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
+
+		//starting the music at the right time
+		if (gameState.time == gameState.musicTime) {
+			gameState.song.play();
+		}
+
+		//enemy notes
+		for (var i = 0; i < gameState.enemyNotes.length; i++) {
+			if (gameState.enemyNotes[i] != null) {
+				if (gameState.enemyNotes[i].y >= gameState.enemyDestroyHeight) {
+					gameState.enemyNotes[i].destroy();
 				}
 			}
-		} else {
-			//score
-			gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
+		}
 
-			//starting the music at the right time
-			if (gameState.time == gameState.musicTime) {
-				gameState.song.play();
-			}
-
-			//enemy notes
-			for (var i = 0; i < gameState.enemyNotes.length; i++) {
-				if (gameState.enemyNotes[i] != null) {
-					if (gameState.enemyNotes[i].y >= gameState.enemyDestroyHeight) {
-						gameState.enemyNotes[i].destroy();
+		// new note spawning
+		for (var i = 0; i < gameState.map.length; i++) {
+			if ((gameState.map[i].time + 60 == gameState.time) {
+				if (gameState.map[i].team == 'player') {
+					if (gameState.map[i].type == 'left') {
+						gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+						gameState.leftNotes.setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'down') {
+						gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+						gameState.downNotes.setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'up') {
+						gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+						gameState.upNotes.setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'right') {
+						gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
+						gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
 					}
 				}
 			}
+		}
+		gameState.time = gameState.time + 1;
 
-			// new note spawning
-			for (var i = 0; i < gameState.map.length; i++) {
-				if (gameState.map[i].time == gameState.time) {
-					if (gameState.map[i].team == 'player') {
-						if (gameState.map[i].type == 'left') {
-							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
-							gameState.leftNotes.setVelocityY(gameState.scrollSpeed);
-						} else if (gameState.map[i].type == 'down') {
-							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
-							gameState.downNotes.setVelocityY(gameState.scrollSpeed);
-						} else if (gameState.map[i].type == 'up') {
-							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
-							gameState.upNotes.setVelocityY(gameState.scrollSpeed);
-						} else if (gameState.map[i].type == 'right') {
-							gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
-							gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
-						}
-					}
-				}
-			}
-			gameState.time = gameState.time + 1;
+		//resetting the 'hit' values (used to prevent holding from giving 100%)
+		if (!gameState.cursors.left.isDown) {
+			gameState.leftHit = false;
+		}
+		if (!gameState.cursors.down.isDown) {
+			gameState.downHit = false;
+		}
+		if (!gameState.cursors.up.isDown) {
+			gameState.upHit = false;
+		}
+		if (!gameState.cursors.right.isDown) {
+			gameState.rightHit = false;
+		}
 
-			//resetting the 'hit' values (used to prevent holding from giving 100%)
-			if (!gameState.cursors.left.isDown) {
-				gameState.leftHit = false;
-			}
-			if (!gameState.cursors.down.isDown) {
-				gameState.downHit = false;
-			}
-			if (!gameState.cursors.up.isDown) {
-				gameState.upHit = false;
-			}
-			if (!gameState.cursors.right.isDown) {
-				gameState.rightHit = false;
-			}
+		//character sprite things (not done)
+		if (gameState.cursors.left.isDown) {
 
-			//character sprite things
-			if (gameState.cursors.left.isDown) {
+		}
+		if (gameState.cursors.up.isDown) {
 
-			}
-			if (gameState.cursors.up.isDown) {
+		}
+		if (gameState.cursors.right.isDown) {
 
-			}
-			if (gameState.cursors.right.isDown) {
+		}
+		if (gameState.cursors.down.isDown) {
 
-			}
-			if (gameState.cursors.down.isDown) {
-
-			}
 		}
 	}
 }
