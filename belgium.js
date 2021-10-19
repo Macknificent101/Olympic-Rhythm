@@ -40,7 +40,7 @@ class belgium extends Phaser.Scene {
 		gameState.noteCount = 0;
 		gameState.enemyNotes = [];
 		gameState.scoreBoard = this.add.text(700, 100, ((gameState.points * 10) / (gameState.noteCount) | 0) + '%', { fill: 'Number000000', fontSize: '20px' });
-		gameState.musicTime = 55;
+		gameState.musicTime = 5;
 
 		//cursor keys pog
 		gameState.cursors = this.input.keyboard.createCursorKeys();
@@ -68,8 +68,25 @@ class belgium extends Phaser.Scene {
 
 		//map of the notes, including enemy but those are not added yet.
 		gameState.map = [
-			{type:'left', team:'player', time:55},
-			{type:'left', team:'player', time:80}
+      ['up', 'player', 1],
+			['left', 'player', 40],
+			['left', 'player', 60],
+      ['left', 'player', 80],
+      ['left', 'player', 100],
+      ['left', 'player', 120],
+      ['left', 'player', 130],
+      ['right', 'player', 145],
+      ['right', 'player', 165],
+      ['right', 'player', 185],
+      ['right', 'player', 205],
+      ['right', 'player', 225],
+      ['right', 'player', 235],
+      ['down', 'player', 250],
+      ['down', 'player', 270],
+      ['down', 'player', 290],
+      ['down', 'player', 310],
+      ['down', 'player', 330],
+      ['down', 'player', 340]
 		];
 
 		//this is for scoring notes
@@ -84,6 +101,7 @@ class belgium extends Phaser.Scene {
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
 				}
+        gameState.leftHit = true;
 			}
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.downNotes, (line, note) => {
@@ -92,11 +110,12 @@ class belgium extends Phaser.Scene {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold note') {
+				} else if (note.texture.key == 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
 				}
+        gameState.downHit = true;
 			}
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.upNotes, (line, note) => {
@@ -105,11 +124,12 @@ class belgium extends Phaser.Scene {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold note') {
+				} else if (note.texture.key == 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
 				}
+        gameState.upHit = true;
 			}
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.rightNotes, (line, note) => {
@@ -118,24 +138,25 @@ class belgium extends Phaser.Scene {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key != 'hold note') {
+				} else if (note.texture.key == 'hold note') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
 				}
+        gameState.rightHit = true;
 			}
 		});
 
 		// this is how we delete notes
 		this.physics.add.overlap(gameState.belowScreen, gameState.leftNotes, (line,note) => {
-			if (note.texture.key = 'hold note') {
+			if (note.texture.key == 'hold note') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount = gameState.noteCount + 1;
 			note.destroy();
 		});
 		this.physics.add.overlap(gameState.belowScreen, gameState.downNotes, (line,note) => {
-			if (note.texture.key = 'hold note') {
+			if (note.texture.key == 'hold note') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount = gameState.noteCount + 1;
@@ -145,14 +166,14 @@ class belgium extends Phaser.Scene {
 			if (note.texture.key = 'hold note') {
 				gameState.points = gameState.points + 9;
 			}
-			gameState.noteCount = gameState.noteCount + 1;
+			gameState.noteCount == gameState.noteCount + 1;
 			note.destroy();
 		});
 		this.physics.add.overlap(gameState.belowScreen, gameState.rightNotes, (line,note) => {
 			if (note.texture.key = 'hold note') {
 				gameState.points = gameState.points + 9;
 			}
-			gameState.noteCount = gameState.noteCount + 1;
+			gameState.noteCount == gameState.noteCount + 1;
 			note.destroy();
 		});
 	}
@@ -203,7 +224,7 @@ class belgium extends Phaser.Scene {
 			}
 		} else {
 			//score
-			gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
+			gameState.scoreBoard.text = (((gameState.points * 10) / (gameState.noteCount)) | 0) + '%';
 
 			//starting the music at the right time
 			if (gameState.time == gameState.musicTime) {
@@ -231,6 +252,10 @@ class belgium extends Phaser.Scene {
 							gameState.downNotes.setVelocityY(gameState.scrollSpeed);
 						} else if (gameState.map[i].type == 'up') {
 							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+							gameState.upNotes.setVelocityY(800);
+						} else if (gameState.map[i][0] == 'right') {
+							gameState.rightNotes.add(this.physics.add.sprite(1444, -50, 'right'));
+							gameState.rightNotes.setVelocityY(800);
 							gameState.upNotes.setVelocityY(gameState.scrollSpeed);
 						} else if (gameState.map[i].type == 'right') {
 							gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
