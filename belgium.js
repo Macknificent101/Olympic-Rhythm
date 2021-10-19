@@ -10,12 +10,6 @@ class belgium extends Phaser.Scene {
 		this.load.image('down', 'assets/note-down.png');
 		this.load.image('up', 'assets/note-up.png');
 		this.load.image('right', 'assets/note-right.png');
-		this.load.image('easy', 'assets/easy.png');
-		this.load.image('normal', 'assets/normal.png');
-		this.load.image('hard', 'assets/hard.png');
-		this.load.image('easy select', 'assets/easy-select.png');
-		this.load.image('normal select', 'assets/normal-select.png');
-		this.load.image('hard select', 'assets/hard-select.png');
 		this.load.image('judge', 'assets/judge.png');
 		this.load.image('background', 'assets/stage.png');
 		this.load.audio('Free Soul', 'music/FreeSoul-FULL.mp3');
@@ -31,7 +25,7 @@ class belgium extends Phaser.Scene {
 		gameState.selection = 1;
 		gameState.points = 0;
 		gameState.time = 0;
-		gameState.timeout = 0;
+		gameState.lastNote = 0;
 		gameState.leftHit = false;
 		gameState.downHit = false;
 		gameState.upHit = false;
@@ -58,10 +52,6 @@ class belgium extends Phaser.Scene {
 		gameState.downNotes = this.physics.add.group();
 		gameState.upNotes = this.physics.add.group();
 		gameState.rightNotes = this.physics.add.group();
-
-		gameState.easy = this.physics.add.sprite(800, 150, 'easy'); //sprite to select easy mode
-		gameState.normal = this.physics.add.sprite(800, 450, 'normal'); //normal
-		gameState.hard = this.physics.add.sprite(800, 750, 'hard'); //hard
 
 		gameState.song = this.sound.add('Free Soul');
 
@@ -176,7 +166,7 @@ class belgium extends Phaser.Scene {
 
 		// new note spawning
 		for (var i = 0; i < gameState.map.length; i++) {
-			if ((gameState.map[i].time + 60 == gameState.time) {
+			if ((gameState.map[i].time - 64 == gameState.time)) {
 				if (gameState.map[i].team == 'player') {
 					if (gameState.map[i].type == 'left') {
 						gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
@@ -194,6 +184,7 @@ class belgium extends Phaser.Scene {
 				}
 			}
 		}
+
 		gameState.time = gameState.time + 1;
 
 		//resetting the 'hit' values (used to prevent holding from giving 100%)
