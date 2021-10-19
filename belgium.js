@@ -259,7 +259,7 @@ class belgium extends Phaser.Scene {
 
 			//character sprite things (work on this)
 			if (gameState.cursors.left.isDown) {
-
+        gameState.polandSprite.setTexture('poland left');
 			}
 			if (gameState.cursors.up.isDown) {
 
@@ -268,7 +268,7 @@ class belgium extends Phaser.Scene {
 
 			}
 			if (gameState.cursors.right.isDown) {
-
+        gameState.polandSprite.setTexture('poland right');
 			}
 		}
 	}
