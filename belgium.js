@@ -6,6 +6,8 @@ class belgium extends Phaser.Scene {
 	preload() {
 		this.load.image('belgium char', 'assets/belgium.png');
 		this.load.image('poland char', 'assets/poland.PNG');
+    this.load.image('poland left', 'assets/poland-left.png');
+    this.load.image('poland right', 'assets/poland-right.png');
 		this.load.image('left', 'assets/note-left.png');
 		this.load.image('down', 'assets/note-down.png');
 		this.load.image('up', 'assets/note-up.png');
@@ -262,10 +264,10 @@ class belgium extends Phaser.Scene {
 			if (gameState.cursors.up.isDown) {
 
 			}
-			if (gameState.cursors.right.isDown) {
+			if (gameState.cursors.down.isDown) {
 
 			}
-			if (gameState.cursors.down.isDown) {
+			if (gameState.cursors.right.isDown) {
 
 			}
 		}
