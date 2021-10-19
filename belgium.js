@@ -57,25 +57,25 @@ class belgium extends Phaser.Scene {
 
 		//map of the notes, including enemy but those are not added yet.
 		gameState.map = [
-      ['up', 'player', 1],
-			['left', 'player', 40],
-			['left', 'player', 60],
-      ['left', 'player', 80],
-      ['left', 'player', 100],
-      ['left', 'player', 120],
-      ['left', 'player', 130],
-      ['right', 'player', 145],
-      ['right', 'player', 165],
-      ['right', 'player', 185],
-      ['right', 'player', 205],
-      ['right', 'player', 225],
-      ['right', 'player', 235],
-      ['down', 'player', 250],
-      ['down', 'player', 270],
-      ['down', 'player', 290],
-      ['down', 'player', 310],
-      ['down', 'player', 330],
-      ['down', 'player', 340]
+      {type:'up', team:'player', time:1},
+			{type:'left', team:'player', time:40},
+			{type:'left', team:'player', time:60},
+      {type:'left', team:'player', time:80},
+      {type:'left', team:'player', time:100},
+      {type:'left', team:'player', time:120},
+      {type:'left', team:'player', time:130},
+      {type:'right', team:'player', time:145},
+      {type:'right', team:'player', time:165},
+      {type:'right', team:'player', time:185},
+      {type:'right', team:'player', time:205},
+      {type:'right', team:'player', time:225},
+      {type:'right', team:'player', time:235},
+      {type:'down', team:'player', time:250},
+      {type:'down', team:'player', time:270},
+      {type:'down', team:'player', time:290},
+      {type:'down', team:'player', time:310},
+      {type:'down', team:'player', time:330},
+      {type:'down', team:'player', time:340}
 		];
 
 		//this is for scoring notes
