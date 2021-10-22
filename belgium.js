@@ -5,9 +5,15 @@ class belgium extends Phaser.Scene {
 
 	preload() {
 		this.load.image('belgium char', 'assets/belgium.png');
-		this.load.image('poland char', 'assets/poland.PNG');
+    this.load.image('belgium left', 'assets/belguim-left.png');
+    this.load.image('belgium left', 'assets/belguim-down.png');
+    this.load.image('belgium right', 'assets/Belguim-right.png');
+    this.load.image('belgium up', 'assets/Belguim-Up.png');
+		this.load.image('poland char', 'assets/poland.png');
     this.load.image('poland left', 'assets/poland-left.png');
     this.load.image('poland right', 'assets/poland-right.png');
+    this.load.image('poland up', 'assets/poland-up.png')
+    this.load.image('poland down', 'assets/poland-down.png')
 		this.load.image('left', 'assets/note-left.png');
 		this.load.image('down', 'assets/note-down.png');
 		this.load.image('up', 'assets/note-up.png');
@@ -216,6 +222,15 @@ class belgium extends Phaser.Scene {
 			for (var i = 0; i < gameState.enemyNotes.length; i++) {
 				if (gameState.enemyNotes[i] != null) {
 					if (gameState.enemyNotes[i].y >= gameState.enemyDestroyHeight) {
+            if (gameState.enemyNotes[i].texture.key = 'left') {
+              gameState.polandSprite.setTexture('belgium left');
+            } else if (gameState.enemyNotes[i].texture.key = 'up') {
+              gameState.polandSprite.setTexture('belgium up');
+            } else if (gameState.enemyNotes[i].texture.key = 'down') {
+              gameState.polandSprite.setTexture('belgium down');
+            } else if (gameState.enemyNotes[i].texture.key = 'right') {
+              gameState.polandSprite.setTexture('belgium right');
+            }
 						gameState.enemyNotes[i].destroy();
 					}
 				}
@@ -260,16 +275,15 @@ class belgium extends Phaser.Scene {
 			//character sprite things (work on this)
 			if (gameState.cursors.left.isDown) {
         gameState.polandSprite.setTexture('poland left');
-			}
-			if (gameState.cursors.up.isDown) {
-
-			}
-			if (gameState.cursors.down.isDown) {
-
-			}
-			if (gameState.cursors.right.isDown) {
+			} else if (gameState.cursors.up.isDown) {
+        gameState.polandSprite.setTexture('poland up');
+			} else if (gameState.cursors.down.isDown) {
+        gameState.polandSprite.setTexture('poland down');
+			} else if (gameState.cursors.right.isDown) {
         gameState.polandSprite.setTexture('poland right');
-			}
+			} else {
+        gameState.polandSprite.setTexture('poland char');
+      }
 		}
 	}
 }
