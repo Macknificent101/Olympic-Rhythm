@@ -5,7 +5,15 @@ class belgium extends Phaser.Scene {
 
 	preload() {
 		this.load.image('belgium char', 'assets/belgium.png');
-		this.load.image('poland char', 'assets/poland.PNG');
+    this.load.image('belgium left', 'assets/belguim-left.png');
+    this.load.image('belgium left', 'assets/belguim-down.png');
+    this.load.image('belgium right', 'assets/Belguim-right.png');
+    this.load.image('belgium up', 'assets/Belguim-Up.png');
+		this.load.image('poland char', 'assets/poland.png');
+    this.load.image('poland left', 'assets/poland-left.png');
+    this.load.image('poland right', 'assets/poland-right.png');
+    this.load.image('poland up', 'assets/poland-up.png')
+    this.load.image('poland down', 'assets/poland-down.png')
 		this.load.image('left', 'assets/note-left.png');
 		this.load.image('down', 'assets/note-down.png');
 		this.load.image('up', 'assets/note-up.png');
@@ -20,27 +28,34 @@ class belgium extends Phaser.Scene {
 		gameState.background = this.physics.add.sprite(800, 450, 'background');
 
 		//most of the boolean/numerical varibles used in the program
+		//mostly note things
 		gameState.enemyDestroyHeight = 800;
 		gameState.scrollSpeed = 800;
 		gameState.selection = 1;
-		gameState.points = 0;
 		gameState.time = 0;
-		gameState.lastNote = 0;
+		gameState.timeout = 0;
+		// used for holding the buttons down
 		gameState.leftHit = false;
 		gameState.downHit = false;
 		gameState.upHit = false;
 		gameState.rightHit = false;
+		//score things
 		gameState.noteCount = 0;
-		gameState.enemyNotes = [];
+		gameState.points = 0;
 		gameState.scoreBoard = this.add.text(700, 100, ((gameState.points * 10) / (gameState.noteCount) | 0) + '%', { fill: 'Number000000', fontSize: '20px' });
+		//the music
 		gameState.musicTime = 5;
+		//animation
+		gameState.enemyAnimationCooldown = 0;
+		gameState.playerAnimationCooldown = 0;
+		gameState.animationLength = 10;
 
 		//cursor keys pog
 		gameState.cursors = this.input.keyboard.createCursorKeys();
 
 		//onscreen elements, like characters
-		gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
-		gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
+		gameState.enemySprite = this.physics.add.sprite(350, 575, 'belgium char');
+		gameState.playerSprite = this.physics.add.sprite(1250, 575, 'poland char');
 		this.add.text(1245, 650, 'YOU');
 		gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
 		gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
@@ -48,6 +63,7 @@ class belgium extends Phaser.Scene {
 		gameState.belowScreen = this.physics.add.sprite(1250, 1000, 'judge');// below the screen, used to delete missed notes
 
 		//gtoups of types of player notes
+		gameState.enemyNotes = [];
 		gameState.leftNotes = this.physics.add.group();
 		gameState.downNotes = this.physics.add.group();
 		gameState.upNotes = this.physics.add.group();
@@ -176,10 +192,24 @@ class belgium extends Phaser.Scene {
 			gameState.song.play();
 		}
 
-		//enemy notes
+		//enemy notes and enemy sprite animation
 		for (var i = 0; i < gameState.enemyNotes.length; i++) {
 			if (gameState.enemyNotes[i] != null) {
 				if (gameState.enemyNotes[i].y >= gameState.enemyDestroyHeight) {
+					if (gameState.enemyNotes[i].texture.key = 'left') {
+						gameState.enemySprite.setTexture('belgium left');
+						gameState.enemyAnimationCooldown = 0;
+					} else if (gameState.enemyNotes[i].texture.key = 'up') {
+						gameState.enemySprite.setTexture('belgium up');
+						gameState.enemySprite.y = 550;
+						gameState.enemyAnimationCooldown = 0;
+					} else if (gameState.enemyNotes[i].texture.key = 'down') {
+						gameState.enemySprite.setTexture('belgium down');
+						gameState.enemyAnimationCooldown = 0;
+					} else if (gameState.enemyNotes[i].texture.key = 'right') {
+						gameState.enemySprite.setTexture('belgium right');
+						gameState.enemyAnimationCooldown = 0;
+					}
 					gameState.enemyNotes[i].destroy();
 				}
 			}
@@ -205,7 +235,6 @@ class belgium extends Phaser.Scene {
 				}
 			}
 		}
-
 		gameState.time = gameState.time + 1;
 
 		//resetting the 'hit' values (used to prevent holding from giving 100%)
@@ -222,18 +251,32 @@ class belgium extends Phaser.Scene {
 			gameState.rightHit = false;
 		}
 
-		//character sprite things (not done)
+		//character sprite animation
 		if (gameState.cursors.left.isDown) {
-
+			gameState.playerSprite.setTexture('poland left');
+			gameState.playerAnimationCooldown = 0;
+		} else if (gameState.cursors.up.isDown) {
+			gameState.playerSprite.setTexture('poland up');
+			gameState.playerAnimationCooldown = 0;
+			gameState.playerSprite.y = 550;
+		} else if (gameState.cursors.down.isDown) {
+			gameState.playerSprite.setTexture('poland down');
+			gameState.playerAnimationCooldown = 0;
+		} else if (gameState.cursors.right.isDown) {
+			gameState.playerSprite.setTexture('poland right');
+			gameState.playerAnimationCooldown = 0;
 		}
-		if (gameState.cursors.up.isDown) {
 
+		//this is for the animation of both caharacter sprites
+		if (gameState.enemyAnimationCooldown >= gameState.animationLength) {
+			gameState.enemySprite.setTexture('belgium char');
+			gameState.enemySprite.y = 575;
 		}
-		if (gameState.cursors.right.isDown) {
-
+		if (gameState.playerAnimationCooldown >= gameState.animationLength) {
+			gameState.playerSprite.setTexture('poland char');
+			gameState.playerSprite.y = 575;
 		}
-		if (gameState.cursors.down.isDown) {
-
-		}
+		gameState.playerAnimationCooldown = gameState.playerAnimationCooldown + 1;
+		gameState.enemyAnimationCooldown = gameState.enemyAnimationCooldown + 1;
 	}
 }
