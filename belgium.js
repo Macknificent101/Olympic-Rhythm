@@ -34,28 +34,34 @@ class belgium extends Phaser.Scene {
 		gameState.background = this.physics.add.sprite(800, 450, 'background');
 
 		//most of the boolean/numerical varibles used in the program
+		//mostly note things
 		gameState.enemyDestroyHeight = 800;
 		gameState.scrollSpeed = 800;
 		gameState.selection = 1;
-		gameState.difficulty = 0;
-		gameState.points = 0;
 		gameState.time = 0;
 		gameState.timeout = 0;
+		// used for holding the buttons down
 		gameState.leftHit = false;
 		gameState.downHit = false;
 		gameState.upHit = false;
 		gameState.rightHit = false;
+		//score things
 		gameState.noteCount = 0;
-		gameState.enemyNotes = [];
+		gameState.points = 0;
 		gameState.scoreBoard = this.add.text(700, 100, ((gameState.points * 10) / (gameState.noteCount) | 0) + '%', { fill: 'Number000000', fontSize: '20px' });
+		//the music
 		gameState.musicTime = 55;
+		//animation
+		gameState.enemyAnimationCooldown = 0;
+		gameState.playerAnimationCooldown = 0;
+		gameState.animationLength = 10;
 
 		//cursor keys pog
 		gameState.cursors = this.input.keyboard.createCursorKeys();
 
 		//onscreen elements, like characters
-		gameState.belguimSprite = this.physics.add.sprite(350, 575, 'belgium char');
-		gameState.polandSprite = this.physics.add.sprite(1250, 575, 'poland char');
+		gameState.enemySprite = this.physics.add.sprite(350, 575, 'belgium char');
+		gameState.playerSprite = this.physics.add.sprite(1250, 575, 'poland char');
 		this.add.text(1245, 650, 'YOU');
 		gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
 		gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
@@ -63,14 +69,11 @@ class belgium extends Phaser.Scene {
 		gameState.belowScreen = this.physics.add.sprite(1250, 1000, 'judge');// below the screen, used to delete missed notes
 
 		//gtoups of types of player notes
+		gameState.enemyNotes = [];
 		gameState.leftNotes = this.physics.add.group();
 		gameState.downNotes = this.physics.add.group();
 		gameState.upNotes = this.physics.add.group();
 		gameState.rightNotes = this.physics.add.group();
-
-		gameState.easy = this.physics.add.sprite(800, 150, 'easy'); //sprite to select easy mode
-		gameState.normal = this.physics.add.sprite(800, 450, 'normal'); //normal
-		gameState.hard = this.physics.add.sprite(800, 750, 'hard'); //hard
 
 		gameState.song = this.sound.add('Free Soul');
 
@@ -166,124 +169,99 @@ class belgium extends Phaser.Scene {
 	}
 
 	update() {
-		if (gameState.difficulty == 0) {
-			gameState.timeout = gameState.timeout + 1;
-			if (gameState.cursors.down.isDown && gameState.timeout > 10) {
-				gameState.selection = gameState.selection + 1;
-				gameState.timeout = 0;
-			} else if (gameState.cursors.up.isDown && gameState.timeout > 10) {
-				gameState.selection = gameState.selection - 1;
-				gameState.timeout = 0;
-			}
-			if (gameState.selection < 0) {
-				gameState.selection = 0;
-			} else if (gameState.selection > 2) {
-				gameState.selection = 2;
-			}
-			if (gameState.cursors.left.isDown) {
-				this.scene.stop('belgium');
-				this.scene.start('mainMenu');
-			}
-			if (gameState.selection == 0) { // on-screen selection
-				gameState.easy.setTexture('easy select');
-				gameState.normal.setTexture('normal');
-				gameState.hard.setTexture('hard');
-			} else if (gameState.selection == 1) {
-				gameState.easy.setTexture('easy');
-				gameState.normal.setTexture('normal select');
-				gameState.hard.setTexture('hard');
-			} else if (gameState.selection == 2) {
-				gameState.easy.setTexture('easy');
-				gameState.normal.setTexture('normal');
-				gameState.hard.setTexture('hard select');
-			}
-			if (gameState.cursors.right.isDown && gameState.timeout > 10) {
-				if (gameState.selection == 0) {
-					gameState.difficulty = 0;
-				} else if (gameState.selection == 1) {
-					gameState.difficulty = 20;
-					gameState.easy.destroy();
-					gameState.normal.destroy();
-					gameState.hard.destroy();
-				} else if (gameState.selection == 2) {
-					gameState.difficulty = 0;
-				}
-			}
-		} else {
-			//score
-			gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
+		//score
+		gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
 
-			//starting the music at the right time
-			if (gameState.time == gameState.musicTime) {
-				gameState.song.play();
-			}
-
-			//enemy notes
-			for (var i = 0; i < gameState.enemyNotes.length; i++) {
-				if (gameState.enemyNotes[i] != null) {
-					if (gameState.enemyNotes[i].y >= gameState.enemyDestroyHeight) {
-            if (gameState.enemyNotes[i].texture.key = 'left') {
-              gameState.polandSprite.setTexture('belgium left');
-            } else if (gameState.enemyNotes[i].texture.key = 'up') {
-              gameState.polandSprite.setTexture('belgium up');
-            } else if (gameState.enemyNotes[i].texture.key = 'down') {
-              gameState.polandSprite.setTexture('belgium down');
-            } else if (gameState.enemyNotes[i].texture.key = 'right') {
-              gameState.polandSprite.setTexture('belgium right');
-            }
-						gameState.enemyNotes[i].destroy();
-					}
-				}
-			}
-
-			// new note spawning
-			for (var i = 0; i < gameState.map.length; i++) {
-				if (gameState.map[i].time == gameState.time) {
-					if (gameState.map[i].team == 'player') {
-						if (gameState.map[i].type == 'left') {
-							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
-							gameState.leftNotes.setVelocityY(gameState.scrollSpeed);
-						} else if (gameState.map[i].type == 'down') {
-							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
-							gameState.downNotes.setVelocityY(gameState.scrollSpeed);
-						} else if (gameState.map[i].type == 'up') {
-							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
-							gameState.upNotes.setVelocityY(gameState.scrollSpeed);
-						} else if (gameState.map[i].type == 'right') {
-							gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
-							gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
-						}
-					}
-				}
-			}
-			gameState.time = gameState.time + 1;
-
-			//resetting the 'hit' values (used to prevent holding from giving 100%)
-			if (!gameState.cursors.left.isDown) {
-				gameState.leftHit = false;
-			}
-			if (!gameState.cursors.down.isDown) {
-				gameState.downHit = false;
-			}
-			if (!gameState.cursors.up.isDown) {
-				gameState.upHit = false;
-			}
-			if (!gameState.cursors.right.isDown) {
-				gameState.rightHit = false;
-			}
-
-			//character sprite things (work on this)
-			if (gameState.cursors.left.isDown) {
-        gameState.polandSprite.setTexture('poland left');
-			} else if (gameState.cursors.up.isDown) {
-        gameState.polandSprite.setTexture('poland up');
-			} else if (gameState.cursors.down.isDown) {
-        gameState.polandSprite.setTexture('poland down');
-			} else if (gameState.cursors.right.isDown) {
-        gameState.polandSprite.setTexture('poland right');
-			} else {
-        gameState.polandSprite.setTexture('poland char');
-      }
+		//starting the music at the right time
+		if (gameState.time == gameState.musicTime) {
+			gameState.song.play();
 		}
+
+		//enemy notes and enemy sprite animation
+		for (var i = 0; i < gameState.enemyNotes.length; i++) {
+			if (gameState.enemyNotes[i] != null) {
+				if (gameState.enemyNotes[i].y >= gameState.enemyDestroyHeight) {
+					if (gameState.enemyNotes[i].texture.key = 'left') {
+						gameState.enemySprite.setTexture('belgium left');
+						gameState.enemyAnimationCooldown = 0;
+					} else if (gameState.enemyNotes[i].texture.key = 'up') {
+						gameState.enemySprite.setTexture('belgium up');
+						gameState.enemySprite.y = 550;
+						gameState.enemyAnimationCooldown = 0;
+					} else if (gameState.enemyNotes[i].texture.key = 'down') {
+						gameState.enemySprite.setTexture('belgium down');
+						gameState.enemyAnimationCooldown = 0;
+					} else if (gameState.enemyNotes[i].texture.key = 'right') {
+						gameState.enemySprite.setTexture('belgium right');
+						gameState.enemyAnimationCooldown = 0;
+					}
+					gameState.enemyNotes[i].destroy();
+				}
+			}
+		}
+
+		// new note spawning
+		for (var i = 0; i < gameState.map.length; i++) {
+			if (gameState.map[i].time == gameState.time) {
+				if (gameState.map[i].team == 'player') {
+					if (gameState.map[i].type == 'left') {
+						gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+						gameState.leftNotes.setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'down') {
+						gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+						gameState.downNotes.setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'up') {
+						gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+						gameState.upNotes.setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'right') {
+						gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
+						gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
+					}
+				}
+			}
+		}
+		gameState.time = gameState.time + 1;
+
+		//resetting the 'hit' values (used to prevent holding from giving 100%)
+		if (!gameState.cursors.left.isDown) {
+			gameState.leftHit = false;
+		}
+		if (!gameState.cursors.down.isDown) {
+			gameState.downHit = false;
+		}
+		if (!gameState.cursors.up.isDown) {
+			gameState.upHit = false;
+		}
+		if (!gameState.cursors.right.isDown) {
+			gameState.rightHit = false;
+		}
+
+		//character sprite animation
+		if (gameState.cursors.left.isDown) {
+			gameState.playerSprite.setTexture('poland left');
+			gameState.playerAnimationCooldown = 0;
+		} else if (gameState.cursors.up.isDown) {
+			gameState.playerSprite.setTexture('poland up');
+			gameState.playerAnimationCooldown = 0;
+			gameState.playerSprite.y = 550;
+		} else if (gameState.cursors.down.isDown) {
+			gameState.playerSprite.setTexture('poland down');
+			gameState.playerAnimationCooldown = 0;
+		} else if (gameState.cursors.right.isDown) {
+			gameState.playerSprite.setTexture('poland right');
+			gameState.playerAnimationCooldown = 0;
+		}
+
+		//this is for the animation of both caharacter sprites
+		if (gameState.enemyAnimationCooldown >= gameState.animationLength) {
+			gameState.enemySprite.setTexture('belgium char');
+			gameState.enemySprite.y = 575;
+		}
+		if (gameState.playerAnimationCooldown >= gameState.animationLength) {
+			gameState.playerSprite.setTexture('poland char');
+			gameState.playerSprite.y = 575;
+		}
+		gameState.playerAnimationCooldown = gameState.playerAnimationCooldown + 1;
+		gameState.enemyAnimationCooldown = gameState.enemyAnimationCooldown + 1;
 	}
 }
