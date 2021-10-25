@@ -57,25 +57,36 @@ class belgium extends Phaser.Scene {
 
 		//map of the notes, including enemy but those are not added yet.
 		gameState.map = [
-      {type:'up', team:'player', time:1},
-			{type:'left', team:'player', time:40},
-			{type:'left', team:'player', time:60},
-      {type:'left', team:'player', time:80},
-      {type:'left', team:'player', time:100},
-      {type:'left', team:'player', time:120},
-      {type:'left', team:'player', time:130},
-      {type:'right', team:'player', time:145},
-      {type:'right', team:'player', time:165},
-      {type:'right', team:'player', time:185},
-      {type:'right', team:'player', time:205},
-      {type:'right', team:'player', time:225},
-      {type:'right', team:'player', time:235},
-      {type:'down', team:'player', time:250},
-      {type:'down', team:'player', time:270},
-      {type:'down', team:'player', time:290},
-      {type:'down', team:'player', time:310},
-      {type:'down', team:'player', time:330},
-      {type:'down', team:'player', time:340}
+      {type:'up', team:'player', time:1, next:true},
+      {type:'up', team:'enemy', time:0, next:false},
+			{type:'left', team:'player', time:40, next:false},
+			{type:'left', team:'player', time:20, next:false},
+      {type:'left', team:'player', time:20, next:false},
+      {type:'left', team:'player', time:20, next:false},
+      {type:'left', team:'player', time:20, next:false},
+      {type:'left', team:'player', time:10, next:false},
+      {type:'right', team:'player', time:10, next:false},
+      {type:'right', team:'player', time:20, next:false},
+      {type:'right', team:'player', time:20, next:false},
+      {type:'right', team:'player', time:20, next:false},
+      {type:'right', team:'player', time:20, next:false},
+      {type:'right', team:'player', time:10, next:false},
+      {type:'down', team:'player', time:10, next:false},
+      {type:'down', team:'player', time:20, next:false},
+      {type:'down', team:'player', time:20, next:false},
+      {type:'down', team:'player', time:20, next:false},
+      {type:'down', team:'player', time:20, next:false},
+      {type:'down', team:'player', time:10, next:false},
+      {type:'left', team:'player', time:10, next:false},
+      {type:'left', team:'player', time:15, next:false},
+      {type:'left', team:'player', time:20, next:false},
+      {type:'left', team:'player', time:15, next:false},
+      {type:'left', team:'player', time:30, next:false},
+      {type:'left', team:'player', time:10, next:false},
+      {type:'up', team:'player', time:20, next:false},
+      {type:'up', team:'player', time:10, next:false},
+      {type:'up', team:'player', time:20, next:false},
+      {type:'up', team:'player', time:10, next:false},
 		];
 
 		//this is for scoring notes
@@ -187,7 +198,7 @@ class belgium extends Phaser.Scene {
 
 		// new note spawning
 		for (var i = 0; i < gameState.map.length; i++) {
-			if ((gameState.map[i].time - 64 == gameState.time)) {
+			if ((gameState.map[i].time == gameState.lastNote) && gameState.map[i].next) {
 				if (gameState.map[i].team == 'player') {
 					if (gameState.map[i].type == 'left') {
 						gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
@@ -199,14 +210,36 @@ class belgium extends Phaser.Scene {
 						gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
 						gameState.upNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'right') {
-						gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
+						gameState.rightNotes.add(this.physics.add.sprite(1439, -50, 'right'));
 						gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
 					}
+				} else if (gameState.map[i].team == 'enemy') {
+					if (gameState.map[i].type == 'left') {
+						gameState.enemyNotes.push(this.physics.add.sprite(160, -50, 'left'));
+						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'down') {
+						gameState.enemyNotes.push(this.physics.add.sprite(286, -50, 'down'));
+						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'up') {
+						gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'up'));
+						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'right') {
+						gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'right'));
+						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
+					}
+				} 
+				gameState.lastNote = 0;
+				try {
+					gameState.map[i+1].next = true;
+				} catch {
+					//nothing for now
 				}
+				gameState.map[i].next = false;
 			}
 		}
 
-		gameState.time = gameState.time + 1;
+		gameState.time++;
+		gameState.lastNote = gameState.lastNote + 1;
 
 		//resetting the 'hit' values (used to prevent holding from giving 100%)
 		if (!gameState.cursors.left.isDown) {
