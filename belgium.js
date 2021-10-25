@@ -65,28 +65,39 @@ class belgium extends Phaser.Scene {
       {type:'left', team:'player', time:20, next:false},
       {type:'left', team:'player', time:20, next:false},
       {type:'left', team:'player', time:10, next:false},
-      {type:'right', team:'player', time:10, next:false},
-      {type:'right', team:'player', time:20, next:false},
-      {type:'right', team:'player', time:20, next:false},
-      {type:'right', team:'player', time:20, next:false},
-      {type:'right', team:'player', time:20, next:false},
-      {type:'right', team:'player', time:10, next:false},
+      {type:'right', team:'player', time:0, next:false},
+      {type:'right', team:'enemy', time:10, next:false},
+      {type:'right', team:'enemy', time:20, next:false},
+      {type:'right', team:'enemy', time:20, next:false},
+      {type:'right', team:'enemy', time:20, next:false},
+      {type:'right', team:'enemy', time:20, next:false},
+      {type:'right', team:'enemy', time:10, next:false},
       {type:'down', team:'player', time:10, next:false},
       {type:'down', team:'player', time:20, next:false},
       {type:'down', team:'player', time:20, next:false},
       {type:'down', team:'player', time:20, next:false},
       {type:'down', team:'player', time:20, next:false},
       {type:'down', team:'player', time:10, next:false},
-      {type:'left', team:'player', time:10, next:false},
-      {type:'left', team:'player', time:15, next:false},
-      {type:'left', team:'player', time:20, next:false},
-      {type:'left', team:'player', time:15, next:false},
-      {type:'left', team:'player', time:30, next:false},
-      {type:'left', team:'player', time:10, next:false},
-      {type:'up', team:'player', time:20, next:false},
+      {type:'up', team:'player', time:0, next:false},
+      {type:'left', team:'enemy', time:10, next:false},
+      {type:'left', team:'enemy', time:20, next:false},
+      {type:'left', team:'enemy', time:20, next:false},
+      {type:'left', team:'enemy', time:20, next:false},
+      {type:'left', team:'enemy', time:20, next:false},
+      {type:'left', team:'enemy', time:10, next:false},
       {type:'up', team:'player', time:10, next:false},
       {type:'up', team:'player', time:20, next:false},
+      {type:'up', team:'player', time:20, next:false},
+      {type:'up', team:'player', time:20, next:false},
+      {type:'up', team:'player', time:20, next:false},
       {type:'up', team:'player', time:10, next:false},
+      {type:'down', team:'player', time:0, next:false},
+      {type:'down', team:'enemy', time:10, next:false},
+      {type:'down', team:'enemy', time:20, next:false},
+      {type:'down', team:'enemy', time:20, next:false},
+      {type:'down', team:'enemy', time:20, next:false},
+      {type:'down', team:'enemy', time:20, next:false},
+      {type:'down', team:'enemy', time:10, next:false},
 		];
 
 		//this is for scoring notes
@@ -224,7 +235,7 @@ class belgium extends Phaser.Scene {
 						gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'up'));
 						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'right') {
-						gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'right'));
+						gameState.enemyNotes.push(this.physics.add.sprite(539, -50, 'right'));
 						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
 					}
 				} 
