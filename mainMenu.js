@@ -52,7 +52,7 @@ class mainMenu extends Phaser.Scene {
 				gameState.storySprite.destroy();
 				gameState.freeSprite.destroy();
 				this.scene.stop('main_menu');
-				this.scene.start('belgium');
+				this.scene.start('france');
 			} else if (gameState.selection == 1) {
 				//something else 
 			}

@@ -1,14 +1,14 @@
-class belgium extends Phaser.Scene {
+class france extends Phaser.Scene {
 	constructor() {
-		super({ key: 'belgium' });
+		super({ key: 'france' });
 	}
 
 	preload() {
-		this.load.image('belgium char', 'assets/belgium.png');
-    this.load.image('belgium left', 'assets/belguim-left.png');
-    this.load.image('belgium left', 'assets/belguim-down.png');
-    this.load.image('belgium right', 'assets/Belguim-right.png');
-    this.load.image('belgium up', 'assets/Belguim-up.png');
+		this.load.image('france char', 'assets/france.png');
+    this.load.image('france left', 'assets/france-left.png');
+    this.load.image('france left', 'assets/france-down.png');
+    this.load.image('france right', 'assets/france-right.png');
+    this.load.image('france up', 'assets/france-up.png');
 		this.load.image('poland char', 'assets/poland.png');
     this.load.image('poland left', 'assets/poland-left.png');
     this.load.image('poland right', 'assets/poland-right.png');
@@ -54,7 +54,7 @@ class belgium extends Phaser.Scene {
 		gameState.cursors = this.input.keyboard.createCursorKeys();
 
 		//onscreen elements, like characters
-		gameState.enemySprite = this.physics.add.sprite(350, 575, 'belgium char');
+		gameState.enemySprite = this.physics.add.sprite(350, 575, 'france char');
 		gameState.playerSprite = this.physics.add.sprite(1250, 575, 'poland char');
 		this.add.text(1245, 650, 'YOU');
 		gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
@@ -187,9 +187,6 @@ class belgium extends Phaser.Scene {
 		//score
 		gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
 
-		//determining if level done
-		if (gameState.time >= 14585)
-
 		//starting the music at the right time
 		if (gameState.time == gameState.musicTime) {
 			gameState.song.play();
@@ -200,17 +197,18 @@ class belgium extends Phaser.Scene {
 			if (gameState.enemyNotes[i] != null) {
 				if (gameState.enemyNotes[i].y >= gameState.enemyDestroyHeight) {
 					if (gameState.enemyNotes[i].texture.key = 'left') {
-						gameState.enemySprite.setTexture('belgium left');
+						gameState.enemySprite.setTexture('france left');
 						gameState.enemyAnimationCooldown = 0;
 					} else if (gameState.enemyNotes[i].texture.key = 'up') {
-						gameState.enemySprite.setTexture('belgium up');
-						gameState.enemySprite.y = 550;
+						gameState.enemySprite.setTexture('france up');
+						gameState.playerSprite.y = 525;
 						gameState.enemyAnimationCooldown = 0;
 					} else if (gameState.enemyNotes[i].texture.key = 'down') {
-						gameState.enemySprite.setTexture('belgium down');
+						gameState.enemySprite.setTexture('france down');
+						gameState.playerSprite.y = 600;
 						gameState.enemyAnimationCooldown = 0;
 					} else if (gameState.enemyNotes[i].texture.key = 'right') {
-						gameState.enemySprite.setTexture('belgium right');
+						gameState.enemySprite.setTexture('france right');
 						gameState.enemyAnimationCooldown = 0;
 					}
 					gameState.enemyNotes[i].destroy();
@@ -235,45 +233,7 @@ class belgium extends Phaser.Scene {
 						gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
 						gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
 					}
-				} else if (gameState.map[i].team == 'enemy') {
-					if (gameState.map[i].type == 'left') {
-						if (gameState.map[i].hold) {
-							gameState.enemyNotes.push(this.physics.add.sprite(160, -50, 'hold'));
-						} else {
-							gameState.enemyNotes.push(this.physics.add.sprite(160, -50, 'left'));
-						}
-						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
-					} else if (gameState.map[i].type == 'down') {
-						if (gameState.map[i].hold) {
-							gameState.enemyNotes.push(this.physics.add.sprite(286, -50, 'hold'));
-						} else {
-							gameState.enemyNotes.push(this.physics.add.sprite(286, -50, 'down'));
-						}
-						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
-					} else if (gameState.map[i].type == 'up') {
-						if (gameState.map[i].hold) {
-							gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'hold'));
-						} else {
-							gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'up'));
-						}
-						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
-					} else if (gameState.map[i].type == 'right') {
-						if (gameState.map[i].hold) {
-							gameState.enemyNotes.push(this.physics.add.sprite(539, -50, 'hold'));
-						} else {
-							gameState.enemyNotes.push(this.physics.add.sprite(539, -50, 'right'));
-						}
-						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
-					}
-				} 
-				gameState.lastNote = 0;
-				try {
-					gameState.map[i+1].next = true;
-				} catch {
-					//nothing for now
 				}
-				gameState.map[i].next = false;
-			}
 			}
 		}
 		gameState.time = gameState.time + 1;
@@ -311,7 +271,7 @@ class belgium extends Phaser.Scene {
 
 		//this is for the animation of both caharacter sprites
 		if (gameState.enemyAnimationCooldown >= gameState.animationLength) {
-			gameState.enemySprite.setTexture('belgium char');
+			gameState.enemySprite.setTexture('france char');
 			gameState.enemySprite.y = 575;
 		}
 		if (gameState.playerAnimationCooldown >= gameState.animationLength) {
