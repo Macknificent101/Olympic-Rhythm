@@ -10,6 +10,7 @@ class belgium extends Phaser.Scene {
 		this.load.image('down', 'assets/note-down.png');
 		this.load.image('up', 'assets/note-up.png');
 		this.load.image('right', 'assets/note-right.png');
+		this.load.image('hold', 'assets/hold.png');
 		this.load.image('judge', 'assets/judge.png');
 		this.load.image('background', 'assets/stage.png');
 		this.load.audio('Free Soul', 'music/FreeSoul-FULL.mp3');
@@ -57,57 +58,127 @@ class belgium extends Phaser.Scene {
 
 		//map of the notes, including enemy but those are not added yet.
 		gameState.map = [
-      {type:'up', team:'player', time:1, next:true},
-      {type:'up', team:'enemy', time:0, next:false},
-			{type:'left', team:'player', time:40, next:false},
-			{type:'left', team:'player', time:20, next:false},
-      {type:'left', team:'player', time:20, next:false},
-      {type:'left', team:'player', time:20, next:false},
-      {type:'left', team:'player', time:20, next:false},
-      {type:'left', team:'player', time:10, next:false},
-      {type:'right', team:'player', time:0, next:false},
-      {type:'right', team:'enemy', time:10, next:false},
-      {type:'right', team:'enemy', time:20, next:false},
-      {type:'right', team:'enemy', time:20, next:false},
-      {type:'right', team:'enemy', time:20, next:false},
-      {type:'right', team:'enemy', time:20, next:false},
-      {type:'right', team:'enemy', time:10, next:false},
-      {type:'down', team:'player', time:10, next:false},
-      {type:'down', team:'player', time:20, next:false},
-      {type:'down', team:'player', time:20, next:false},
-      {type:'down', team:'player', time:20, next:false},
-      {type:'down', team:'player', time:20, next:false},
-      {type:'down', team:'player', time:10, next:false},
-      {type:'up', team:'player', time:0, next:false},
-      {type:'left', team:'enemy', time:10, next:false},
-      {type:'left', team:'enemy', time:20, next:false},
-      {type:'left', team:'enemy', time:20, next:false},
-      {type:'left', team:'enemy', time:20, next:false},
-      {type:'left', team:'enemy', time:20, next:false},
-      {type:'left', team:'enemy', time:10, next:false},
-      {type:'up', team:'player', time:10, next:false},
-      {type:'up', team:'player', time:20, next:false},
-      {type:'up', team:'player', time:20, next:false},
-      {type:'up', team:'player', time:20, next:false},
-      {type:'up', team:'player', time:20, next:false},
-      {type:'up', team:'player', time:10, next:false},
-      {type:'down', team:'player', time:0, next:false},
-      {type:'down', team:'enemy', time:10, next:false},
-      {type:'down', team:'enemy', time:20, next:false},
-      {type:'down', team:'enemy', time:20, next:false},
-      {type:'down', team:'enemy', time:20, next:false},
-      {type:'down', team:'enemy', time:20, next:false},
-      {type:'down', team:'enemy', time:10, next:false},
+      {type:'up', team:'player', time:1, next:true, hold:false},
+      {type:'up', team:'enemy', time:0, next:false, hold:false},
+			{type:'left', team:'player', time:40, next:false, hold:false},
+			{type:'left', team:'player', time:20, next:false, hold:false},
+      {type:'left', team:'player', time:20, next:false, hold:false},
+      {type:'left', team:'player', time:20, next:false, hold:false},
+      {type:'left', team:'player', time:20, next:false, hold:false},
+      {type:'left', team:'player', time:10, next:false, hold:false},
+      {type:'right', team:'player', time:0, next:false, hold:false},
+      {type:'right', team:'enemy', time:10, next:false, hold:false},
+      {type:'right', team:'enemy', time:20, next:false, hold:false},
+      {type:'right', team:'enemy', time:20, next:false, hold:false},
+      {type:'right', team:'enemy', time:20, next:false, hold:false},
+      {type:'right', team:'enemy', time:20, next:false, hold:false},
+      {type:'right', team:'enemy', time:10, next:false, hold:false},
+      {type:'down', team:'player', time:10, next:false, hold:false},
+      {type:'down', team:'player', time:20, next:false, hold:false},
+      {type:'down', team:'player', time:20, next:false, hold:false},
+      {type:'down', team:'player', time:20, next:false, hold:false},
+      {type:'down', team:'player', time:20, next:false, hold:false},
+      {type:'down', team:'player', time:10, next:false, hold:false},
+      {type:'up', team:'player', time:0, next:false, hold:false},
+      {type:'left', team:'enemy', time:10, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:10, next:false, hold:false},
+      {type:'up', team:'player', time:10, next:false, hold:false},
+      {type:'up', team:'player', time:20, next:false, hold:false},
+      {type:'up', team:'player', time:20, next:false, hold:false},
+      {type:'up', team:'player', time:20, next:false, hold:false},
+      {type:'up', team:'player', time:20, next:false, hold:false},
+      {type:'up', team:'player', time:10, next:false, hold:false},
+      {type:'down', team:'player', time:0, next:false, hold:false},
+      {type:'down', team:'enemy', time:10, next:false, hold:false},
+      {type:'down', team:'enemy', time:20, next:false, hold:false},
+      {type:'down', team:'enemy', time:20, next:false, hold:false},
+      {type:'down', team:'enemy', time:20, next:false, hold:false},
+      {type:'down', team:'enemy', time:20, next:false, hold:false},
+      {type:'down', team:'enemy', time:10, next:false, hold:false},
+      {type:'right', team:'player', time:10, next:false, hold:false},
+      {type:'right', team:'player', time:20, next:false, hold:false},
+      {type:'right', team:'player', time:20, next:false, hold:false},
+      {type:'right', team:'player', time:20, next:false, hold:false},
+      {type:'right', team:'player', time:20, next:false, hold:false},
+      {type:'right', team:'player', time:10, next:false, hold:false},
+      {type:'left', team:'player', time:0, next:false, hold:false},
+      {type:'left', team:'enemy', time:10, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:10, next:false, hold:false},
+      {type:'up', team:'enemy', time:10, next:false, hold:false},
+      {type:'left', team:'player', time:10, next:false, hold:false},
+      {type:'down', team:'player', time:0, next:false, hold:false},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'up', team:'enemy', time:10, next:false, hold:false},
+      {type:'right', team:'enemy', time:0, next:false, hold:false},
+      {type:'right', team:'enemy', time:1, next:false, hold:true},
+      {type:'right', team:'enemy', time:1, next:false, hold:true},
+      {type:'right', team:'enemy', time:1, next:false, hold:true},
+      {type:'right', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'right', team:'player', time:10, next:false, hold:false},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'up', team:'player', time:10, next:false, hold:false},
+      {type: 'down', team:'player', time:10, next:false, hold:false},
+      {type: 'up', team:'player', time:10, next:false, hold:false},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'down', team:'player', time:10, next:false, hold:false},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'right', team:'player', time:10, next:false, hold:false},
+      {type: 'up', team:'player', time:10, next:false, hold:false},
+      {type: 'right', team:'player', time:10, next:false, hold:false},
+      {type: 'left', team:'enemy', time:30, next:false, hold:false},
+      {type: 'down', team:'enemy', time:0, next:false, hold:false},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'right', team:'player', time:23, next:false, hold:false},
+      {type: 'left', team:'player', time:0, next:false, hold:false},
+      {type: 'down', team:'enemy', time:70, next:false, hold:false},
+      {type: 'up', team:'enemy', time:0, next:false, hold:false},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'player', time:45, next:false, hold:false},
+      {type: 'down', team:'player', time:0, next:false, hold:false},
+      {type: 'left', team:'enemy', time:45, next:false, hold:false},
+      {type: 'right', team:'enemy', time:0, next:false, hold:false},
+      {type: 'up', team:'player', time:30, next:false, hold:false},
+      {type: 'right', team:'player', time:5, next:false, hold:false},
+      {type: 'down', team:'player', time:10, next:false, hold:false},
+      {type: 'up', team:'player', time:10, next:false, hold:false},
 		];
 
 		//this is for scoring notes
 		this.physics.add.overlap(gameState.pJudge, gameState.leftNotes, (line, note) => {
 			if (gameState.cursors.left.isDown) { //if the left button is down
-				if (!gameState.leftHit && note.texture.key != 'hold note') { //then we check if its a hold note, and aslong as it isnt we make sure the button isnt being held
+				if (!gameState.leftHit && note.texture.key != 'hold') { //then we check if its a hold note, and aslong as it isnt we make sure the button isnt being held
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key == 'hold note') { //if it is a hold note dont check if it is held
+				} else if (note.texture.key == 'hold') { //if it is a hold note dont check if it is held
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -117,11 +188,11 @@ class belgium extends Phaser.Scene {
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.downNotes, (line, note) => {
 			if (gameState.cursors.down.isDown) {
-				if (!gameState.downHit && note.texture.key != 'hold note') {
+				if (!gameState.downHit && note.texture.key != 'hold') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key == 'hold note') {
+				} else if (note.texture.key == 'hold') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -131,11 +202,11 @@ class belgium extends Phaser.Scene {
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.upNotes, (line, note) => {
 			if (gameState.cursors.up.isDown) {
-				if (!gameState.upHit && note.texture.key != 'hold note') {
+				if (!gameState.upHit && note.texture.key != 'hold') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key == 'hold note') {
+				} else if (note.texture.key == 'hold') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -145,11 +216,11 @@ class belgium extends Phaser.Scene {
 		});
 		this.physics.add.overlap(gameState.pJudge, gameState.rightNotes, (line, note) => {
 			if (gameState.cursors.right.isDown) {
-				if (!gameState.rightHit && note.texture.key != 'hold note') {
+				if (!gameState.rightHit && note.texture.key != 'hold') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
-				} else if (note.texture.key == 'hold note') {
+				} else if (note.texture.key == 'hold') {
 					gameState.points = gameState.points + 10;
 					gameState.noteCount = gameState.noteCount + 1;
 					note.destroy();
@@ -160,28 +231,28 @@ class belgium extends Phaser.Scene {
 
 		// this is how we delete notes
 		this.physics.add.overlap(gameState.belowScreen, gameState.leftNotes, (line,note) => {
-			if (note.texture.key == 'hold note') {
+			if (note.texture.key == 'hold') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount = gameState.noteCount + 1;
 			note.destroy();
 		});
 		this.physics.add.overlap(gameState.belowScreen, gameState.downNotes, (line,note) => {
-			if (note.texture.key == 'hold note') {
+			if (note.texture.key == 'hold') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount = gameState.noteCount + 1;
 			note.destroy();
 		});
 		this.physics.add.overlap(gameState.belowScreen, gameState.upNotes, (line,note) => {
-			if (note.texture.key == 'hold note') {
+			if (note.texture.key == 'hold') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount == gameState.noteCount + 1;
 			note.destroy();
 		});
 		this.physics.add.overlap(gameState.belowScreen, gameState.rightNotes, (line,note) => {
-			if (note.texture.key == 'hold note') {
+			if (note.texture.key == 'hold') {
 				gameState.points = gameState.points + 9;
 			}
 			gameState.noteCount == gameState.noteCount + 1;
@@ -212,30 +283,62 @@ class belgium extends Phaser.Scene {
 			if ((gameState.map[i].time == gameState.lastNote) && gameState.map[i].next) {
 				if (gameState.map[i].team == 'player') {
 					if (gameState.map[i].type == 'left') {
-						gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+						if (gameState.map[i].hold) {
+							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'hold'));
+						} else {
+							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+						}
 						gameState.leftNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'down') {
-						gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+						if (gameState.map[i].hold) {
+							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'hold'));
+						} else {
+							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+						}
 						gameState.downNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'up') {
-						gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+						if (gameState.map[i].hold) {
+							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'hold'));
+						} else {
+							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+						}
 						gameState.upNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'right') {
-						gameState.rightNotes.add(this.physics.add.sprite(1439, -50, 'right'));
+						if (gameState.map[i].hold) {
+							gameState.rightNotes.add(this.physics.add.sprite(1439, -50, 'hold'));
+						} else {
+							gameState.rightNotes.add(this.physics.add.sprite(1439, -50, 'right'));
+						}
 						gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
 					}
 				} else if (gameState.map[i].team == 'enemy') {
 					if (gameState.map[i].type == 'left') {
-						gameState.enemyNotes.push(this.physics.add.sprite(160, -50, 'left'));
+						if (gameState.map[i].hold) {
+							gameState.enemyNotes.push(this.physics.add.sprite(160, -50, 'hold'));
+						} else {
+							gameState.enemyNotes.push(this.physics.add.sprite(160, -50, 'left'));
+						}
 						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'down') {
-						gameState.enemyNotes.push(this.physics.add.sprite(286, -50, 'down'));
+						if (gameState.map[i].hold) {
+							gameState.enemyNotes.push(this.physics.add.sprite(286, -50, 'hold'));
+						} else {
+							gameState.enemyNotes.push(this.physics.add.sprite(286, -50, 'down'));
+						}
 						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'up') {
-						gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'up'));
+						if (gameState.map[i].hold) {
+							gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'hold'));
+						} else {
+							gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'up'));
+						}
 						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'right') {
-						gameState.enemyNotes.push(this.physics.add.sprite(539, -50, 'right'));
+						if (gameState.map[i].hold) {
+							gameState.enemyNotes.push(this.physics.add.sprite(539, -50, 'hold'));
+						} else {
+							gameState.enemyNotes.push(this.physics.add.sprite(539, -50, 'right'));
+						}
 						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
 					}
 				} 
