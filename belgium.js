@@ -69,29 +69,120 @@ class belgium extends Phaser.Scene {
 		gameState.upNotes = this.physics.add.group();
 		gameState.rightNotes = this.physics.add.group();
 
-		gameState.song = this.sound.add('Free Soul');
+		//le song
+		gameState.songParts = [
+			{ name: 'belgium', start: 1, duration: 54.0, config: {} },
+			{ name: 'france', start: 55, duration: 54.0, config: {} },
+			{ name: 'russia', start: 55, duration: 54.0, config: {} }
+		];
 
 		//map of the notes, including enemy but those are not added yet.
 		gameState.map = [
-      {type:'up', team:'player', time:1},
-			{type:'left', team:'player', time:40},
-			{type:'left', team:'player', time:60},
-			{type:'left', team:'player', time:80},
-      {type:'left', team:'player', time:100},
-      {type:'left', team:'player', time:120},
-      {type:'left', team:'player', time:130},
-      {type:'right', team:'player', time:145},
-      {type:'right', team:'player', time:165},
-      {type:'right', team:'player', time:185},
-			{type:'right', team:'player', time:205},
-			{type:'right', team:'player', time:225},
-			{type:'right', team:'player', time:235},
-      {type:'down', team:'player', time:250},
-      {type:'down', team:'player', time:270},
-      {type:'down', team:'player', time:290},
-      {type:'down', team:'player', time:310},
-      {type:'down', team:'player', time:330},
-      {type:'down', team:'player', time:340}
+      {type:'up', team:'player', time:1, next:true, hold:false},
+      {type:'up', team:'enemy', time:0, next:false, hold:false},
+			{type:'left', team:'player', time:40, next:false, hold:false},
+			{type:'left', team:'player', time:20, next:false, hold:false},
+      {type:'left', team:'player', time:20, next:false, hold:false},
+      {type:'left', team:'player', time:20, next:false, hold:false},
+      {type:'left', team:'player', time:20, next:false, hold:false},
+      {type:'left', team:'player', time:10, next:false, hold:false},
+      {type:'right', team:'player', time:0, next:false, hold:false},
+      {type:'right', team:'enemy', time:10, next:false, hold:false},
+      {type:'right', team:'enemy', time:20, next:false, hold:false},
+      {type:'right', team:'enemy', time:20, next:false, hold:false},
+      {type:'right', team:'enemy', time:20, next:false, hold:false},
+      {type:'right', team:'enemy', time:20, next:false, hold:false},
+      {type:'right', team:'enemy', time:10, next:false, hold:false},
+      {type:'down', team:'player', time:10, next:false, hold:false},
+      {type:'down', team:'player', time:20, next:false, hold:false},
+      {type:'down', team:'player', time:20, next:false, hold:false},
+      {type:'down', team:'player', time:20, next:false, hold:false},
+      {type:'down', team:'player', time:20, next:false, hold:false},
+      {type:'down', team:'player', time:10, next:false, hold:false},
+      {type:'up', team:'player', time:0, next:false, hold:false},
+      {type:'left', team:'enemy', time:10, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:10, next:false, hold:false},
+      {type:'up', team:'player', time:10, next:false, hold:false},
+      {type:'up', team:'player', time:20, next:false, hold:false},
+      {type:'up', team:'player', time:20, next:false, hold:false},
+      {type:'up', team:'player', time:20, next:false, hold:false},
+      {type:'up', team:'player', time:20, next:false, hold:false},
+      {type:'up', team:'player', time:10, next:false, hold:false},
+      {type:'down', team:'player', time:0, next:false, hold:false},
+      {type:'down', team:'enemy', time:10, next:false, hold:false},
+      {type:'down', team:'enemy', time:20, next:false, hold:false},
+      {type:'down', team:'enemy', time:20, next:false, hold:false},
+      {type:'down', team:'enemy', time:20, next:false, hold:false},
+      {type:'down', team:'enemy', time:20, next:false, hold:false},
+      {type:'down', team:'enemy', time:10, next:false, hold:false},
+      {type:'right', team:'player', time:10, next:false, hold:false},
+      {type:'right', team:'player', time:20, next:false, hold:false},
+      {type:'right', team:'player', time:20, next:false, hold:false},
+      {type:'right', team:'player', time:20, next:false, hold:false},
+      {type:'right', team:'player', time:20, next:false, hold:false},
+      {type:'right', team:'player', time:10, next:false, hold:false},
+      {type:'left', team:'player', time:0, next:false, hold:false},
+      {type:'left', team:'enemy', time:10, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:20, next:false, hold:false},
+      {type:'left', team:'enemy', time:10, next:false, hold:false},
+      {type:'up', team:'enemy', time:10, next:false, hold:false},
+      {type:'left', team:'player', time:10, next:false, hold:false},
+      {type:'down', team:'player', time:0, next:false, hold:false},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'down', team:'player', time:1, next:false, hold:true},
+      {type:'up', team:'enemy', time:10, next:false, hold:false},
+      {type:'right', team:'enemy', time:0, next:false, hold:false},
+      {type:'right', team:'enemy', time:1, next:false, hold:true},
+      {type:'right', team:'enemy', time:1, next:false, hold:true},
+      {type:'right', team:'enemy', time:1, next:false, hold:true},
+      {type:'right', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'right', team:'player', time:10, next:false, hold:false},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'up', team:'player', time:10, next:false, hold:false},
+      {type: 'down', team:'player', time:10, next:false, hold:false},
+      {type: 'up', team:'player', time:10, next:false, hold:false},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'down', team:'player', time:10, next:false, hold:false},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'right', team:'player', time:10, next:false, hold:false},
+      {type: 'up', team:'player', time:10, next:false, hold:false},
+      {type: 'right', team:'player', time:10, next:false, hold:false},
+      {type: 'left', team:'enemy', time:30, next:false, hold:false},
+      {type: 'down', team:'enemy', time:0, next:false, hold:false},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'enemy', time:1, next:false, hold:true},
+      {type: 'right', team:'player', time:23, next:false, hold:false},
+      {type: 'left', team:'player', time:0, next:false, hold:false},
+      {type: 'down', team:'enemy', time:70, next:false, hold:false},
+      {type: 'up', team:'enemy', time:0, next:false, hold:false},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'down', team:'enemy', time:1, next:false, hold:true},
+      {type: 'left', team:'player', time:10, next:false, hold:false},
+      {type: 'down', team:'player', time:0, next:false, hold:false},
 		];
 
 		//this is for scoring notes
@@ -192,7 +283,7 @@ class belgium extends Phaser.Scene {
 
 		//starting the music at the right time
 		if (gameState.time == gameState.musicTime) {
-			gameState.song.play();
+			this.sound.play('Free Soul', markers['belgium']);
 		}
 
 		//enemy notes and enemy sprite animation
@@ -202,16 +293,19 @@ class belgium extends Phaser.Scene {
 					if (gameState.enemyNotes[i].texture.key = 'left') {
 						gameState.enemySprite.setTexture('belgium left');
 						gameState.enemyAnimationCooldown = 0;
+						gameState.enemySprite.y = 575;
 					} else if (gameState.enemyNotes[i].texture.key = 'up') {
 						gameState.enemySprite.setTexture('belgium up');
-						gameState.enemySprite.y = 550;
 						gameState.enemyAnimationCooldown = 0;
+						gameState.enemySprite.y = 525;
 					} else if (gameState.enemyNotes[i].texture.key = 'down') {
 						gameState.enemySprite.setTexture('belgium down');
 						gameState.enemyAnimationCooldown = 0;
+						gameState.enemySprite.y = 575;
 					} else if (gameState.enemyNotes[i].texture.key = 'right') {
 						gameState.enemySprite.setTexture('belgium right');
 						gameState.enemyAnimationCooldown = 0;
+						gameState.enemySprite.y = 575;
 					}
 					gameState.enemyNotes[i].destroy();
 				}
@@ -220,19 +314,35 @@ class belgium extends Phaser.Scene {
 
 		// new note spawning
 		for (var i = 0; i < gameState.map.length; i++) {
-			if ((gameState.map[i].time - 64 == gameState.time)) {
+			if ((gameState.map[i].time == gameState.lastNote) && gameState.map[i].next) {
 				if (gameState.map[i].team == 'player') {
 					if (gameState.map[i].type == 'left') {
-						gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+						if (gameState.map[i].hold) {
+							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'hold'));
+						} else {
+							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+						}
 						gameState.leftNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'down') {
-						gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+						if (gameState.map[i].hold) {
+							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'hold'));
+						} else {
+							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+						}
 						gameState.downNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'up') {
-						gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+						if (gameState.map[i].hold) {
+							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'hold'));
+						} else {
+							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+						}
 						gameState.upNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'right') {
-						gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
+						if (gameState.map[i].hold) {
+							gameState.rightNotes.add(this.physics.add.sprite(1439, -50, 'hold'));
+						} else {
+							gameState.rightNotes.add(this.physics.add.sprite(1439, -50, 'right'));
+						}
 						gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
 					}
 				} else if (gameState.map[i].team == 'enemy') {
@@ -274,9 +384,10 @@ class belgium extends Phaser.Scene {
 				}
 				gameState.map[i].next = false;
 			}
-			}
 		}
-		gameState.time = gameState.time + 1;
+
+		gameState.time++;
+		gameState.lastNote = gameState.lastNote + 1;
 
 		//resetting the 'hit' values (used to prevent holding from giving 100%)
 		if (!gameState.cursors.left.isDown) {
@@ -296,6 +407,7 @@ class belgium extends Phaser.Scene {
 		if (gameState.cursors.left.isDown) {
 			gameState.playerSprite.setTexture('poland left');
 			gameState.playerAnimationCooldown = 0;
+			gameState.playerSprite.y = 575;
 		} else if (gameState.cursors.up.isDown) {
 			gameState.playerSprite.setTexture('poland up');
 			gameState.playerAnimationCooldown = 0;
@@ -303,10 +415,11 @@ class belgium extends Phaser.Scene {
 		} else if (gameState.cursors.down.isDown) {
 			gameState.playerSprite.setTexture('poland down');
 			gameState.playerAnimationCooldown = 0;
-			gameState.playerSprite.y = 600;
+			gameState.playerSprite.y = 575;
 		} else if (gameState.cursors.right.isDown) {
 			gameState.playerSprite.setTexture('poland right');
 			gameState.playerAnimationCooldown = 0;
+			gameState.playerSprite.y = 575;
 		}
 
 		//this is for the animation of both caharacter sprites

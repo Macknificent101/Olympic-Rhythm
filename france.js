@@ -218,25 +218,79 @@ class france extends Phaser.Scene {
 
 		// new note spawning
 		for (var i = 0; i < gameState.map.length; i++) {
-			if ((gameState.map[i].time - 64 == gameState.time)) {
+			if ((gameState.map[i].time == gameState.lastNote) && gameState.map[i].next) {
 				if (gameState.map[i].team == 'player') {
 					if (gameState.map[i].type == 'left') {
-						gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+						if (gameState.map[i].hold) {
+							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'hold'));
+						} else {
+							gameState.leftNotes.add(this.physics.add.sprite(1060, -50, 'left'));
+						}
 						gameState.leftNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'down') {
-						gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+						if (gameState.map[i].hold) {
+							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'hold'));
+						} else {
+							gameState.downNotes.add(this.physics.add.sprite(1186, -50, 'down'));
+						}
 						gameState.downNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'up') {
-						gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+						if (gameState.map[i].hold) {
+							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'hold'));
+						} else {
+							gameState.upNotes.add(this.physics.add.sprite(1304, -50, 'up'));
+						}
 						gameState.upNotes.setVelocityY(gameState.scrollSpeed);
 					} else if (gameState.map[i].type == 'right') {
-						gameState.rightNotes.add(this.physics.add.sprite(1304, -50, 'right'));
+						if (gameState.map[i].hold) {
+							gameState.rightNotes.add(this.physics.add.sprite(1439, -50, 'hold'));
+						} else {
+							gameState.rightNotes.add(this.physics.add.sprite(1439, -50, 'right'));
+						}
 						gameState.rightNotes.setVelocityY(gameState.scrollSpeed);
 					}
+				} else if (gameState.map[i].team == 'enemy') {
+					if (gameState.map[i].type == 'left') {
+						if (gameState.map[i].hold) {
+							gameState.enemyNotes.push(this.physics.add.sprite(160, -50, 'hold'));
+						} else {
+							gameState.enemyNotes.push(this.physics.add.sprite(160, -50, 'left'));
+						}
+						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'down') {
+						if (gameState.map[i].hold) {
+							gameState.enemyNotes.push(this.physics.add.sprite(286, -50, 'hold'));
+						} else {
+							gameState.enemyNotes.push(this.physics.add.sprite(286, -50, 'down'));
+						}
+						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'up') {
+						if (gameState.map[i].hold) {
+							gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'hold'));
+						} else {
+							gameState.enemyNotes.push(this.physics.add.sprite(404, -50, 'up'));
+						}
+						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
+					} else if (gameState.map[i].type == 'right') {
+						if (gameState.map[i].hold) {
+							gameState.enemyNotes.push(this.physics.add.sprite(539, -50, 'hold'));
+						} else {
+							gameState.enemyNotes.push(this.physics.add.sprite(539, -50, 'right'));
+						}
+						gameState.enemyNotes[gameState.enemyNotes.length-1].setVelocityY(gameState.scrollSpeed);
+					}
+				} 
+				gameState.lastNote = 0;
+				try {
+					gameState.map[i+1].next = true;
+				} catch {
+					//nothing for now
 				}
+				gameState.map[i].next = false;
 			}
 		}
-		gameState.time = gameState.time + 1;
+		gameState.time++;
+		gameState.lastNote = gameState.lastNote + 1;
 
 		//resetting the 'hit' values (used to prevent holding from giving 100%)
 		if (!gameState.cursors.left.isDown) {
