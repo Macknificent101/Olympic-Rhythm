@@ -58,6 +58,7 @@ class belgium extends Phaser.Scene {
 		gameState.enemySprite = this.physics.add.sprite(350, 575, 'belgium char');
 		gameState.playerSprite = this.physics.add.sprite(1250, 575, 'poland char');
 		this.add.text(1245, 650, 'YOU');
+		gameState.scoreLine = this.physics.add.sprite(1250, 800, 'judge').setScale(1,0.01).refreshBody();//used for scoring
 		gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
 		gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
 
@@ -208,7 +209,7 @@ class belgium extends Phaser.Scene {
         gameState.leftHit = true;
 			}
 		});
-		this.physics.add.overlap(gameState.pJudge, gameState.downNotes, (line, note) => {
+		this.physics.add.overlap(gameState.scoreLine, gameState.downNotes, (line, note) => {
 			if (gameState.cursors.down.isDown) {
 				if (!gameState.downHit && note.texture.key != 'hold') {
 					gameState.points = gameState.points + 10;
@@ -222,7 +223,7 @@ class belgium extends Phaser.Scene {
         gameState.downHit = true;
 			}
 		});
-		this.physics.add.overlap(gameState.pJudge, gameState.upNotes, (line, note) => {
+		this.physics.add.overlap(gameState.scoreLine, gameState.upNotes, (line, note) => {
 			if (gameState.cursors.up.isDown) {
 				if (!gameState.upHit && note.texture.key != 'hold') {
 					gameState.points = gameState.points + 10;
@@ -236,7 +237,7 @@ class belgium extends Phaser.Scene {
         gameState.upHit = true;
 			}
 		});
-		this.physics.add.overlap(gameState.pJudge, gameState.rightNotes, (line, note) => {
+		this.physics.add.overlap(gameState.scoreLine, gameState.rightNotes, (line, note) => {
 			if (gameState.cursors.right.isDown) {
 				if (!gameState.rightHit && note.texture.key != 'hold') {
 					gameState.points = gameState.points + 10;
