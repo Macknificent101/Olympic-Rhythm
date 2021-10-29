@@ -73,11 +73,6 @@ class belgium extends Phaser.Scene {
 
 		//le song
     gameState.song = this.sound.add('Free Soul');
-		gameState.songParts = [
-			{ name: 'belgium', start: 1, duration: 54.0, config: {} },
-			{ name: 'france', start: 55, duration: 54.0, config: {} },
-			{ name: 'russia', start: 55, duration: 54.0, config: {} }
-		];
 
 		//map of the notes, including enemy but those are not added yet.
 		gameState.map = [
@@ -195,7 +190,7 @@ class belgium extends Phaser.Scene {
 		];
 
 		//this is for scoring notes
-		this.physics.add.overlap(gameState.pJudge, gameState.leftNotes, (line, note) => {
+		this.physics.add.overlap(gameState.scoreLine, gameState.leftNotes, (line, note) => {
 			if (gameState.cursors.left.isDown) { //if the left button is down
 				if (!gameState.leftHit && note.texture.key != 'hold') { //then we check if its a hold note, and aslong as it isnt we make sure the button isnt being held
 					gameState.points = gameState.points + 10;
@@ -396,7 +391,7 @@ class belgium extends Phaser.Scene {
 		}
 
 		gameState.time++;
-		gameState.lastNote = gameState.lastNote + 1;
+		gameState.lastNote++;
 
 		//resetting the 'hit' values (used to prevent holding from giving 100%)
 		if (!gameState.cursors.left.isDown) {
