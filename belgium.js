@@ -48,9 +48,8 @@ class belgium extends Phaser.Scene {
     gameState.enemyAnimationCooldown = 0;
     gameState.playerAnimationCooldown = 0;
     gameState.animationLength = 20;
-		//time things (complex, halp pls)
-		gameState.date = new Date();
-		gameState.beginDateFrames = parseInt(gameState.date.getTime() * (3/50));
+		// time things (complex, halp pls)
+		gameState.beginDateFrames = Math.round(Date.now() * (3/50));
     gameState.time = 0;
     gameState.timeout = 0;
     gameState.lastNote = 0;
@@ -221,12 +220,50 @@ class belgium extends Phaser.Scene {
       { type: 'up', team: 'player', time: 10, next: false, hold: false },
       { type: 'down', team: 'player', time: 10, next: false, hold: false },
       { type: 'up', team: 'player', time: 10, next: false, hold: false },
-      { type: 'down', team: 'player', time: 15, next: false, hold: false },
+      { type: 'down', team: 'player', time: 20, next: false, hold: false },
       { type: 'down', team: 'player', time: 1, next: false, hold: true },
       { type: 'down', team: 'player', time: 1, next: false, hold: true },
       { type: 'down', team: 'player', time: 1, next: false, hold: true },
       { type: 'down', team: 'player', time: 1, next: false, hold: true },
       { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'player', time: 30, next: false, hold: false },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 1, next: false, hold: true },
+      { type: 'up', team: 'player', time: 1, next: false, hold: true },
+      { type: 'up', team: 'player', time: 1, next: false, hold: true },
+      { type: 'up', team: 'player', time: 1, next: false, hold: true },
+      { type: 'up', team: 'player', time: 1, next: false, hold: true },
     ];
 
     //this is for scoring notes
@@ -438,19 +475,18 @@ class belgium extends Phaser.Scene {
       }
     }
 
-    //odd time things
-		gameState.time++;
-    gameState.lastNote++;
-		if (10 <  gameState.time && gameState.time < 100){
-			console.log(gameState.beginDateFrames - (parseInt(gameState.date.getTime() * (3/50))));
-		}
-		if (gameState.time != (gameState.beginDateFrames - (parseInt(gameState.date.getTime() * (3/50))))){
-			/*
-			let x = gameState.time - (gameState.beginDateFrames - (parseInt(gameState.date.getTime() * (3/50))));
+    //odd time things, because certain computers are broken (somehow, im a programmer not a computer maker)
+		if (gameState.time != ((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames)){
+			let x = ((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames) - gameState.time;
 			gameState.time += x;
 			gameState.lastNote += x;
-			*/
 		}
+		if (10 <  gameState.time && gameState.time < 100){
+			console.log((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames);
+			console.log(gameState.time);
+		}
+		gameState.time++;
+    gameState.lastNote++;
 
     //resetting the 'hit' values (used to prevent holding from giving 100%)
     if (!gameState.cursors.left.isDown) {

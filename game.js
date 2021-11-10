@@ -13,7 +13,7 @@ const config = {
 			fps: 60
     }
   },
-  scene: [title,mainMenu,belgium,france]
+  scene: [title,mainMenu,belgium,france,russia]
 };
 
 const game = new Phaser.Game(config);
