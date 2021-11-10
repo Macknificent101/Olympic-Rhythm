@@ -5,19 +5,21 @@ class mainMenu extends Phaser.Scene {
 	}
 
 	preload() {
+		this.load.image('level select', 'assets/level-select.png');
 		this.load.image('belgium', 'assets/belgium-level.png');
 		this.load.image('belgium select', 'assets/belgium-level-selected.png');
 		this.load.image('france select', 'assets/france-level-selected.png');
 		this.load.image('france', 'assets/france-level.png');
 		this.load.image('russia select', 'assets/russia-level-selected.png');
 		this.load.image('russia', 'assets/russia-level.png');
-
 	}
 
 	create() {
 		gameState.cursors = this.input.keyboard.createCursorKeys();
 		gameState.timeout = 0;
 		gameState.selection = 0;
+		
+		gameState.background = this.physics.add.sprite(800,450,'level select');
 	}
 
 	update() {
@@ -32,7 +34,7 @@ class mainMenu extends Phaser.Scene {
 		if (gameState.selection < 0) {
 			gameState.selection = 0;
 		} else if (gameState.selection > 2) {
-			gameState.selection = 1;
+			gameState.selection = 2;
 		}
 		if (gameState.timeout == 0) {
 			gameState.belgium = this.physics.add.sprite(800, 300, 'belgium');
@@ -60,6 +62,7 @@ class mainMenu extends Phaser.Scene {
 				this.scene.stop('main_menu');
 				this.scene.start('france');
 			}
+			gameState.background.destroy();
 		}
 		if (gameState.cursors.left.isDown && gameState.timeout > 10) {
 			this.scene.stop('main_menu');

@@ -20,22 +20,19 @@ class belgium extends Phaser.Scene {
     this.load.image('right', 'assets/note-right.png');
     this.load.image('hold', 'assets/hold.png');
     this.load.image('judge', 'assets/judge.png');
-    this.load.image('background', 'assets/stage.png');
+    this.load.image('stage', 'assets/stage.png');
     this.load.audio('Free Soul', 'music/FreeSoul-FULL.mp3');
   }
 
   create() {
     //making the background
-    gameState.background = this.physics.add.sprite(800, 450, 'background');
+    gameState.stage = this.physics.add.sprite(800, 450, 'stage');
 
     //most of the boolean/numerical varibles used in the program
     //mostly note things
     gameState.enemyDestroyHeight = 800;
     gameState.scrollSpeed = 800;
     gameState.selection = 1;
-    gameState.time = 0;
-    gameState.timeout = 0;
-    gameState.lastNote = 0;
     // used for holding the buttons down
     gameState.leftHit = false;
     gameState.downHit = false;
@@ -51,6 +48,12 @@ class belgium extends Phaser.Scene {
     gameState.enemyAnimationCooldown = 0;
     gameState.playerAnimationCooldown = 0;
     gameState.animationLength = 20;
+		//time things (complex, halp pls)
+		gameState.date = new Date();
+		gameState.beginDateFrames = parseInt(gameState.date.getTime() * (3/50));
+    gameState.time = 0;
+    gameState.timeout = 0;
+    gameState.lastNote = 0;
 
     //cursor keys pog
     gameState.cursors = this.input.keyboard.createCursorKeys();
@@ -185,14 +188,40 @@ class belgium extends Phaser.Scene {
       { type: 'left', team: 'enemy', time: 45, next: false, hold: false },
       { type: 'right', team: 'enemy', time: 0, next: false, hold: false },
       { type: 'up', team: 'player', time: 30, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 0, next: false, hold: false },
       { type: 'right', team: 'player', time: 5, next: false, hold: false },
+      { type: 'right', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'down', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 80, next: false, hold: false },
+      { type: 'left', team: 'player', time: 0, next: false, hold: false },
+      { type: 'down', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'down', team: 'player', time: 0, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 5, next: false, hold: false },
+      { type: 'up', team: 'player', time: 0, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 5, next: false, hold: false },
+      { type: 'left', team: 'player', time: 0, next: false, hold: false },
+      { type: 'up', team: 'player', time: 80, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'player', time: 5, next: false, hold: false },
+      { type: 'right', team: 'player', time: 5, next: false, hold: false },
+      { type: 'left', team: 'player', time: 40, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
       { type: 'down', team: 'player', time: 10, next: false, hold: false },
       { type: 'up', team: 'player', time: 10, next: false, hold: false },
       { type: 'up', team: 'player', time: 10, next: false, hold: false },
-      { type: 'left', team: 'enemy', time: 81, next: false, hold: false },
-      { type: 'down', team: 'enemy', time: 10, next: false, hold: false },
-      { type: 'up', team: 'enemy', time: 5, next: false, hold: false },
-      { type: 'left', team: 'enemy', time: 5, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      
     ];
 
     //this is for scoring notes
@@ -289,7 +318,7 @@ class belgium extends Phaser.Scene {
     gameState.scoreBoard.text = (gameState.points * 10) / (gameState.noteCount) | 0 + '%';
 
     //determining if level done
-    if (gameState.time >= 5220) {
+    if (gameState.time == 3240) {
 			gameState.song.stop();
 			this.scene.stop('belgium');
 			this.scene.start('mainMenu');
@@ -404,8 +433,19 @@ class belgium extends Phaser.Scene {
       }
     }
 
-    gameState.time++;
+    //odd time things
+		gameState.time++;
     gameState.lastNote++;
+		if (10 <=  gameState.time && gameState.time <= 100){
+			console.log(gameState.beginDateFrames - (parseInt(gameState.date.getTime() * (3/50))));
+		}
+		if (gameState.time != (gameState.beginDateFrames - (parseInt(gameState.date.getTime() * (3/50))))){
+			/*
+			let x = gameState.time - (gameState.beginDateFrames - (parseInt(gameState.date.getTime() * (3/50))));
+			gameState.time += x;
+			gameState.lastNote += x;
+			*/
+		}
 
     //resetting the 'hit' values (used to prevent holding from giving 100%)
     if (!gameState.cursors.left.isDown) {

@@ -9,7 +9,6 @@ class title extends Phaser.Scene {
     this.load.image('story', 'assets/story.png');
     this.load.image('free select', 'assets/free-select.png');
     this.load.image('free', 'assets/free.png');
-    
   }
 
   create() {
