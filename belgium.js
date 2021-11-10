@@ -221,7 +221,12 @@ class belgium extends Phaser.Scene {
       { type: 'up', team: 'player', time: 10, next: false, hold: false },
       { type: 'down', team: 'player', time: 10, next: false, hold: false },
       { type: 'up', team: 'player', time: 10, next: false, hold: false },
-      
+      { type: 'down', team: 'player', time: 15, next: false, hold: false },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
     ];
 
     //this is for scoring notes
@@ -436,7 +441,7 @@ class belgium extends Phaser.Scene {
     //odd time things
 		gameState.time++;
     gameState.lastNote++;
-		if (10 <=  gameState.time && gameState.time <= 100){
+		if (10 <  gameState.time && gameState.time < 100){
 			console.log(gameState.beginDateFrames - (parseInt(gameState.date.getTime() * (3/50))));
 		}
 		if (gameState.time != (gameState.beginDateFrames - (parseInt(gameState.date.getTime() * (3/50))))){
