@@ -29,6 +29,7 @@ class belgium extends Phaser.Scene {
     gameState.stage = this.physics.add.sprite(800, 450, 'stage');
 
     //most of the boolean/numerical varibles used in the program
+		gameState.x = 0;
     //mostly note things
     gameState.enemyDestroyHeight = 800;
     gameState.scrollSpeed = 800;
@@ -49,7 +50,7 @@ class belgium extends Phaser.Scene {
     gameState.playerAnimationCooldown = 0;
     gameState.animationLength = 20;
 		// time things (complex, halp pls)
-		gameState.beginDateFrames = Math.round(Date.now() * (3/50));
+		gameState.beginDateFrames = Math.floor(Date.now() * (3/50));
     gameState.time = 0;
     gameState.timeout = 0;
     gameState.lastNote = 0;
@@ -67,7 +68,7 @@ class belgium extends Phaser.Scene {
 
     gameState.belowScreen = this.physics.add.sprite(1250, 1000, 'judge');// below the screen, used to delete missed notes
 
-    //gtoups of types of player notes
+    //groups of types of player notes
     gameState.enemyNotes = [];
     gameState.leftNotes = this.physics.add.group();
     gameState.downNotes = this.physics.add.group();
@@ -77,7 +78,7 @@ class belgium extends Phaser.Scene {
     //le song
     gameState.song = this.sound.add('Free Soul');
 
-    //map of the notes, including enemy but those are not added yet.
+    //map of the notes, including enemy.
     gameState.map = [
       { type: 'up', team: 'player', time: 1, next: true, hold: false },
       { type: 'up', team: 'enemy', time: 0, next: false, hold: false },
@@ -264,6 +265,151 @@ class belgium extends Phaser.Scene {
       { type: 'up', team: 'player', time: 1, next: false, hold: true },
       { type: 'up', team: 'player', time: 1, next: false, hold: true },
       { type: 'up', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 60, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'right', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'left', team: 'player', time: 60, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'left', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'left', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'left', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'left', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 0, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 30, next: false, hold: false },
+      { type: 'down', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'right', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 50, next: false, hold: false },
+      { type: 'right', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'down', team: 'enemy', time: 15, next: false, hold: false },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'left', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 60, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 15, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 20, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'left', team: 'player', time: 30, next: false, hold: false },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'left', team: 'player', time: 1, next: false, hold: true },
+      { type: 'down', team: 'player', time: 10, next: false, hold: false },
+      { type: 'up', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'player', time: 10, next: false, hold: false },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'player', time: 1, next: false, hold: true },
+      { type: 'right', team: 'enemy', time: 40, next: false, hold: false },
+      { type: 'left', team: 'enemy', time: 15, next: false, hold: false },
+      { type: 'down', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 10, next: false, hold: false },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'up', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 20, next: false, hold: false },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
+      { type: 'down', team: 'enemy', time: 1, next: false, hold: true },
     ];
 
     //this is for scoring notes
@@ -401,9 +547,12 @@ class belgium extends Phaser.Scene {
       }
     }
 
+		// omg i hate my life
+
     // making new notes
     for (var i = 0; i < gameState.map.length; i++) {
-      if ((gameState.map[i].time == gameState.lastNote) && gameState.map[i].next) {
+      if ((gameState.map[i].time <= gameState.lastNote) && gameState.map[i].next) {
+
         if (gameState.map[i].team == 'player') {
           if (gameState.map[i].type == 'left') {
             if (gameState.map[i].hold) {
@@ -465,7 +614,7 @@ class belgium extends Phaser.Scene {
             gameState.enemyNotes[gameState.enemyNotes.length - 1][0].setVelocityY(gameState.scrollSpeed);
           }
         }
-        gameState.lastNote = 0;
+        gameState.lastNote = gameState.lastNote - gameState.map[i].time;
         try {
           gameState.map[i + 1].next = true;
         } catch {
@@ -476,17 +625,16 @@ class belgium extends Phaser.Scene {
     }
 
     //odd time things, because certain computers are broken (somehow, im a programmer not a computer maker)
-		if (gameState.time != ((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames)){
-			let x = ((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames) - gameState.time;
-			gameState.time += x;
-			gameState.lastNote += x;
-		}
-		if (10 <  gameState.time && gameState.time < 100){
-			console.log((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames);
-			console.log(gameState.time);
+		if (gameState.time != ((Math.floor(Date.now() * (3/50))) - gameState.beginDateFrames)){
+			gameState.x = ((Math.floor(Date.now() * (3/50))) - gameState.beginDateFrames) - gameState.time;
+			gameState.time += gameState.x;
+			gameState.lastNote += gameState.x;
 		}
 		gameState.time++;
     gameState.lastNote++;
+		if (gameState.time <= 100) {
+			console.log(gameState.time)
+		}
 
     //resetting the 'hit' values (used to prevent holding from giving 100%)
     if (!gameState.cursors.left.isDown) {

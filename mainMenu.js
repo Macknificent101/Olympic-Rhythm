@@ -61,6 +61,9 @@ class mainMenu extends Phaser.Scene {
 			} else if (gameState.selection == 1) {
 				this.scene.stop('main_menu');
 				this.scene.start('france');
+			} else if (gameState.selection == 2) {
+				this.scene.stop('main_menu');
+				this.scene.start('russia');
 			}
 			gameState.background.destroy();
 		}

@@ -17,6 +17,7 @@ class russia extends Phaser.Scene {
     gameState.stage = this.physics.add.sprite(800, 450, 'stage');
 
     //most of the boolean/numerical varibles used in the program
+		gameState.x = 0;
     //mostly note things
     gameState.enemyDestroyHeight = 800;
     gameState.scrollSpeed = 800;
@@ -207,7 +208,8 @@ class russia extends Phaser.Scene {
 
     // making new notes
     for (var i = 0; i < gameState.map.length; i++) {
-      if ((gameState.map[i].time == gameState.lastNote) && gameState.map[i].next) {
+      if ((gameState.map[i].time <= gameState.lastNote) && gameState.map[i].next) {
+
         if (gameState.map[i].team == 'player') {
           if (gameState.map[i].type == 'left') {
             if (gameState.map[i].hold) {
@@ -269,7 +271,7 @@ class russia extends Phaser.Scene {
             gameState.enemyNotes[gameState.enemyNotes.length - 1][0].setVelocityY(gameState.scrollSpeed);
           }
         }
-        gameState.lastNote = 0;
+        gameState.lastNote = gameState.lastNote - gameState.map[i].time;
         try {
           gameState.map[i + 1].next = true;
         } catch {
@@ -280,14 +282,10 @@ class russia extends Phaser.Scene {
     }
 
     //odd time things, because certain computers are broken (somehow, im a programmer not a computer maker)
-		if (gameState.time != ((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames)){
-			let x = ((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames) - gameState.time;
-			gameState.time += x;
-			gameState.lastNote += x;
-		}
-		if (10 <  gameState.time && gameState.time < 100){
-			console.log((Math.round(Date.now() * (3/50))) - gameState.beginDateFrames);
-			console.log(gameState.time);
+		if (gameState.time != ((Math.floor(Date.now() * (3/50))) - gameState.beginDateFrames)){
+			gameState.x = ((Math.floor(Date.now() * (3/50))) - gameState.beginDateFrames) - gameState.time;
+			gameState.time += gameState.x;
+			gameState.lastNote += gameState.x;
 		}
 		gameState.time++;
     gameState.lastNote++;
