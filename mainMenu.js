@@ -18,8 +18,8 @@ class mainMenu extends Phaser.Scene {
 		gameState.cursors = this.input.keyboard.createCursorKeys();
 		gameState.timeout = 0;
 		gameState.selection = 0;
-		
-		gameState.background = this.physics.add.sprite(800,450,'level select');
+
+		gameState.background = this.physics.add.sprite(800, 450, 'level select');
 	}
 
 	update() {

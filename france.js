@@ -1,249 +1,249 @@
 class france extends Phaser.Scene {
-  constructor() {
-    super({ key: 'france' });
-  }
+	constructor() {
+		super({ key: 'france' });
+	}
 
-  preload() {
-    this.load.image('france char', 'assets/france.png');
-    this.load.image('france left', 'assets/france-left.png');
-    this.load.image('france down', 'assets/france-down.png');
-    this.load.image('france right', 'assets/france-right.png');
-    this.load.image('france up', 'assets/france-up.png');
-    this.load.audio('france song', 'music/france-song.mp3');
-    this.load.image('poland char', 'assets/poland.png');
-    this.load.image('poland left', 'assets/poland-left.png');
-    this.load.image('poland right', 'assets/poland-right.png');
-    this.load.image('poland up', 'assets/poland-up.png')
-    this.load.image('poland down', 'assets/poland-down.png')
-    this.load.image('left', 'assets/note-left.png');
-    this.load.image('down', 'assets/note-down.png');
-    this.load.image('up', 'assets/note-up.png');
-    this.load.image('right', 'assets/note-right.png');
-    this.load.image('hold', 'assets/hold.png');
-    this.load.image('judge', 'assets/judge.png');
-    this.load.image('stage', 'assets/stage.png');
+	preload() {
+		this.load.image('france char', 'assets/france.png');
+		this.load.image('france left', 'assets/france-left.png');
+		this.load.image('france down', 'assets/france-down.png');
+		this.load.image('france right', 'assets/france-right.png');
+		this.load.image('france up', 'assets/france-up.png');
+		this.load.audio('france song', 'music/france-song.mp3');
+		this.load.image('poland char', 'assets/poland.png');
+		this.load.image('poland left', 'assets/poland-left.png');
+		this.load.image('poland right', 'assets/poland-right.png');
+		this.load.image('poland up', 'assets/poland-up.png')
+		this.load.image('poland down', 'assets/poland-down.png')
+		this.load.image('left', 'assets/note-left.png');
+		this.load.image('down', 'assets/note-down.png');
+		this.load.image('up', 'assets/note-up.png');
+		this.load.image('right', 'assets/note-right.png');
+		this.load.image('hold', 'assets/hold.png');
+		this.load.image('judge', 'assets/judge.png');
+		this.load.image('stage', 'assets/stage.png');
 		this.load.image('finish', 'assets/finish-screen.png');
-    this.load.image('accuracy bar', 'assets/accuracy-bar.png');
+		this.load.image('accuracy bar', 'assets/accuracy-bar.png');
 		this.load.image('pass', 'assets/pass.png');
 		this.load.image('fail', 'assets/fail.png');
-  }
+	}
 
-  create() {
-    //making the background
-    gameState.stage = this.physics.add.sprite(800, 450, 'stage');
+	create() {
+		//making the background
+		gameState.stage = this.physics.add.sprite(800, 450, 'stage');
 
-    //most of the boolean/numerical varibles used in the program
+		//most of the boolean/numerical varibles used in the program
 		gameState.x = 0;
-    //mostly note things
-    gameState.enemyDestroyHeight = 800;
-    gameState.scrollSpeed = 800;
-    gameState.selection = 1;
-    // used for holding the buttons down
-    gameState.leftHit = false;
-    gameState.downHit = false;
-    gameState.upHit = false;
-    gameState.rightHit = false;
-    //score things
-    gameState.noteCount = 0;
-    gameState.points = 0;
-    gameState.accuracyBar = this.physics.add.sprite(800, 100, 'accuracy bar');
-    gameState.scoreBoard = this.add.text(750, 100, (Math.floor((gameState.points * 10) / (gameState.noteCount)) + '%'), { fill: 'Number000000', fontSize: '20px' });
-    //the music
-    gameState.musicTime = 8;
+		//mostly note things
+		gameState.enemyDestroyHeight = 800;
+		gameState.scrollSpeed = 800;
+		gameState.selection = 1;
+		// used for holding the buttons down
+		gameState.leftHit = false;
+		gameState.downHit = false;
+		gameState.upHit = false;
+		gameState.rightHit = false;
+		//score things
+		gameState.noteCount = 0;
+		gameState.points = 0;
+		gameState.accuracyBar = this.physics.add.sprite(800, 100, 'accuracy bar');
+		gameState.scoreBoard = this.add.text(750, 100, (Math.floor((gameState.points * 10) / (gameState.noteCount)) + '%'), { fill: 'Number000000', fontSize: '20px' });
+		//the music
+		gameState.musicTime = 8;
 		gameState.musicEndTime = 3000;
 		//pass or fail stuffs
 		gameState.complete = false;
 		gameState.idkWhatToCallThisOne = 0;
 		gameState.passAccuracy = 85
-    //animation
-    gameState.enemyAnimationCooldown = 0;
-    gameState.playerAnimationCooldown = 0;
-    gameState.animationLength = 20;
+		//animation
+		gameState.enemyAnimationCooldown = 0;
+		gameState.playerAnimationCooldown = 0;
+		gameState.animationLength = 20;
 		// time things (complex, halp pls)
-		gameState.beginDateFrames = Math.round(Date.now() * (3/50));
-    gameState.time = 0;
-    gameState.timeout = 0;
-    gameState.lastNote = 0;
+		gameState.beginDateFrames = Math.round(Date.now() * (3 / 50));
+		gameState.time = 0;
+		gameState.timeout = 0;
+		gameState.lastNote = 0;
 
-    //cursor keys pog
-    gameState.cursors = this.input.keyboard.createCursorKeys();
+		//cursor keys pog
+		gameState.cursors = this.input.keyboard.createCursorKeys();
 
-    //onscreen elements, like characters
-    gameState.enemySprite = this.physics.add.sprite(350, 575, 'france char');
-    gameState.playerSprite = this.physics.add.sprite(1250, 575, 'poland char');
-    this.add.text(1245, 650, 'YOU');
-    gameState.scoreLine = this.physics.add.sprite(1250, 800, 'judge').setScale(1, 0.01).refreshBody();//used for scoring
-    gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
-    gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
+		//onscreen elements, like characters
+		gameState.enemySprite = this.physics.add.sprite(350, 575, 'france char');
+		gameState.playerSprite = this.physics.add.sprite(1250, 575, 'poland char');
+		this.add.text(1245, 650, 'YOU');
+		gameState.scoreLine = this.physics.add.sprite(1250, 800, 'judge').setScale(1, 0.01).refreshBody();//used for scoring
+		gameState.pJudge = this.physics.add.sprite(1250, 800, 'judge');
+		gameState.eJudge = this.physics.add.sprite(350, 800, 'judge');
 
-    gameState.belowScreen = this.physics.add.sprite(1250, 1000, 'judge');// below the screen, used to delete missed notes
+		gameState.belowScreen = this.physics.add.sprite(1250, 1000, 'judge');// below the screen, used to delete missed notes
 
-    //gtoups of types of player notes
-    gameState.enemyNotes = [];
-    gameState.leftNotes = this.physics.add.group();
-    gameState.downNotes = this.physics.add.group();
-    gameState.upNotes = this.physics.add.group();
-    gameState.rightNotes = this.physics.add.group();
+		//gtoups of types of player notes
+		gameState.enemyNotes = [];
+		gameState.leftNotes = this.physics.add.group();
+		gameState.downNotes = this.physics.add.group();
+		gameState.upNotes = this.physics.add.group();
+		gameState.rightNotes = this.physics.add.group();
 
-    //le song
-    gameState.song = this.sound.add('france song');
+		//le song
+		gameState.song = this.sound.add('france song');
 
-    //map of the notes, including enemy but those are not added yet.
-    gameState.map = [
-      { type: 'up', team: 'player', time: 1, next: true, hold: false },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'up', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: false },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true },
-      { type: 'left', team: 'player', time: 1, next: false, hold: true }
-    ];
+		//map of the notes, including enemy but those are not added yet.
+		gameState.map = [
+			{ type: 'up', team: 'player', time: 1, next: true, hold: false },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'up', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: false },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true },
+			{ type: 'left', team: 'player', time: 1, next: false, hold: true }
+		];
 
-    //this is for scoring notes
-    this.physics.add.overlap(gameState.scoreLine, gameState.leftNotes, (line, note) => {
-      if (gameState.cursors.left.isDown) { //if the left button is down
-        if (!gameState.leftHit && note.texture.key != 'hold') { //then we check if its a hold note, and aslong as it isnt we make sure the button isnt being held
-          gameState.points = gameState.points + 10;
-          gameState.noteCount = gameState.noteCount + 1;
-          note.destroy();
-        } else if (note.texture.key == 'hold') { //if it is a hold note dont check if it is held
-          gameState.points = gameState.points + 10;
-          gameState.noteCount = gameState.noteCount + 1;
-          note.destroy();
-        }
-        gameState.leftHit = true;
-      }
-    });
-    this.physics.add.overlap(gameState.scoreLine, gameState.downNotes, (line, note) => {
-      if (gameState.cursors.down.isDown) {
-        if (!gameState.downHit && note.texture.key != 'hold') {
-          gameState.points = gameState.points + 10;
-          gameState.noteCount = gameState.noteCount + 1;
-          note.destroy();
-        } else if (note.texture.key == 'hold') {
-          gameState.points = gameState.points + 10;
-          gameState.noteCount = gameState.noteCount + 1;
-          note.destroy();
-        }
-        gameState.downHit = true;
-      }
-    });
-    this.physics.add.overlap(gameState.scoreLine, gameState.upNotes, (line, note) => {
-      if (gameState.cursors.up.isDown) {
-        if (!gameState.upHit && note.texture.key != 'hold') {
-          gameState.points = gameState.points + 10;
-          gameState.noteCount = gameState.noteCount + 1;
-          note.destroy();
-        } else if (note.texture.key == 'hold') {
-          gameState.points = gameState.points + 10;
-          gameState.noteCount = gameState.noteCount + 1;
-          note.destroy();
-        }
-        gameState.upHit = true;
-      }
-    });
-    this.physics.add.overlap(gameState.scoreLine, gameState.rightNotes, (line, note) => {
-      if (gameState.cursors.right.isDown) {
-        if (!gameState.rightHit && note.texture.key != 'hold') {
-          gameState.points = gameState.points + 10;
-          gameState.noteCount = gameState.noteCount + 1;
-          note.destroy();
-        } else if (note.texture.key == 'hold') {
-          gameState.points = gameState.points + 10;
-          gameState.noteCount = gameState.noteCount + 1;
-          note.destroy();
-        }
-        gameState.rightHit = true;
-      }
-    });
+		//this is for scoring notes
+		this.physics.add.overlap(gameState.scoreLine, gameState.leftNotes, (line, note) => {
+			if (gameState.cursors.left.isDown) { //if the left button is down
+				if (!gameState.leftHit && note.texture.key != 'hold') { //then we check if its a hold note, and aslong as it isnt we make sure the button isnt being held
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key == 'hold') { //if it is a hold note dont check if it is held
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+				gameState.leftHit = true;
+			}
+		});
+		this.physics.add.overlap(gameState.scoreLine, gameState.downNotes, (line, note) => {
+			if (gameState.cursors.down.isDown) {
+				if (!gameState.downHit && note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key == 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+				gameState.downHit = true;
+			}
+		});
+		this.physics.add.overlap(gameState.scoreLine, gameState.upNotes, (line, note) => {
+			if (gameState.cursors.up.isDown) {
+				if (!gameState.upHit && note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key == 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+				gameState.upHit = true;
+			}
+		});
+		this.physics.add.overlap(gameState.scoreLine, gameState.rightNotes, (line, note) => {
+			if (gameState.cursors.right.isDown) {
+				if (!gameState.rightHit && note.texture.key != 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				} else if (note.texture.key == 'hold') {
+					gameState.points = gameState.points + 10;
+					gameState.noteCount = gameState.noteCount + 1;
+					note.destroy();
+				}
+				gameState.rightHit = true;
+			}
+		});
 
-    // this is how we delete notes
-    this.physics.add.overlap(gameState.belowScreen, gameState.leftNotes, (line, note) => {
-      if (note.texture.key == 'hold') {
-        gameState.points = gameState.points + 5;
-      }
-      gameState.noteCount = gameState.noteCount + 1;
-      note.destroy();
-    });
-    this.physics.add.overlap(gameState.belowScreen, gameState.downNotes, (line, note) => {
-      if (note.texture.key == 'hold') {
-        gameState.points = gameState.points + 5;
-      }
-      gameState.noteCount = gameState.noteCount + 1;
-      note.destroy();
-    });
-    this.physics.add.overlap(gameState.belowScreen, gameState.upNotes, (line, note) => {
-      if (note.texture.key == 'hold') {
-        gameState.points = gameState.points + 5;
-      }
-      gameState.noteCount == gameState.noteCount + 1;
-      note.destroy();
-    });
-    this.physics.add.overlap(gameState.belowScreen, gameState.rightNotes, (line, note) => {
-      if (note.texture.key == 'hold') {
-        gameState.points = gameState.points + 5;
-      }
-      gameState.noteCount == gameState.noteCount + 1;
-      note.destroy();
-    });
-  }
+		// this is how we delete notes
+		this.physics.add.overlap(gameState.belowScreen, gameState.leftNotes, (line, note) => {
+			if (note.texture.key == 'hold') {
+				gameState.points = gameState.points + 5;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.downNotes, (line, note) => {
+			if (note.texture.key == 'hold') {
+				gameState.points = gameState.points + 5;
+			}
+			gameState.noteCount = gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.upNotes, (line, note) => {
+			if (note.texture.key == 'hold') {
+				gameState.points = gameState.points + 5;
+			}
+			gameState.noteCount == gameState.noteCount + 1;
+			note.destroy();
+		});
+		this.physics.add.overlap(gameState.belowScreen, gameState.rightNotes, (line, note) => {
+			if (note.texture.key == 'hold') {
+				gameState.points = gameState.points + 5;
+			}
+			gameState.noteCount == gameState.noteCount + 1;
+			note.destroy();
+		});
+	}
 
-  update() {
+	update() {
 		if (!gameState.complete) {
 			//score
 			gameState.scoreBoard.text = Math.floor((gameState.points * 10) / (gameState.noteCount)) + '%';
@@ -365,8 +365,8 @@ class france extends Phaser.Scene {
 			}
 
 			//odd time things, because certain computers are broken (somehow, im a programmer not a computer maker)
-			if (gameState.time != ((Math.floor(Date.now() * (3/50))) - gameState.beginDateFrames)){
-				gameState.x = ((Math.floor(Date.now() * (3/50))) - gameState.beginDateFrames) - gameState.time;
+			if (gameState.time != ((Math.floor(Date.now() * (3 / 50))) - gameState.beginDateFrames)) {
+				gameState.x = ((Math.floor(Date.now() * (3 / 50))) - gameState.beginDateFrames) - gameState.time;
 				gameState.time += gameState.x;
 				gameState.lastNote += gameState.x;
 			}
@@ -430,10 +430,10 @@ class france extends Phaser.Scene {
 				gameState.finalScore = this.add.text(700, 100, (Math.floor((gameState.points * 10) / (gameState.noteCount)) + '%'), { fill: 'NumberFFFFFF', fontSize: '100px' });
 				gameState.idkWhatToCallThisOne++;
 			}
-			if (gameState.cursors.right.isDown){
+			if (gameState.cursors.right.isDown) {
 				this.scene.stop('france');
 				this.scene.start('mainMenu');
-			} 
+			}
 		}
-  }
+	}
 }
