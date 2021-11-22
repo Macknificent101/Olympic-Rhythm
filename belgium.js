@@ -779,7 +779,7 @@ class belgium extends Phaser.Scene {
 		} else {
 			while (gameState.idkWhatToCallThisOne == 0) {
 				gameState.finishBackground = this.physics.add.sprite(800, 450, 'finish');
-				if ((gameState.passAccuracy <= Math.floor((gameState.points * 10) / (gameState.noteCount)) + '%')) {
+				if (gameState.passAccuracy <= Math.floor((gameState.points * 10) / (gameState.noteCount))) {
 					gameState.passOrFail = this.physics.add.sprite(350, 350, 'pass');
 				} else {
 					gameState.passOrFail = this.physics.add.sprite(350, 350, 'fail');

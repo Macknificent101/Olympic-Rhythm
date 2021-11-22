@@ -366,7 +366,7 @@ class russia extends Phaser.Scene {
 					gameState.passOrFail = this.physics.add.sprite(350, 350, 'fail');
 				}
 				gameState.finishEnemy = this.physics.add.sprite(1150, 525, 'russia char').setScale(2);
-				gameState.finalScore = this.add.text(700, 100, Math.floor((gameState.points * 10) / (gameState.noteCount)) + '%', { fill: 'NumberFFFFFF', fontSize: '100px' });
+				gameState.finalScore = this.add.text(700, 100, (Math.floor((gameState.points * 10) / (gameState.noteCount)) + '%'), { fill: 'NumberFFFFFF', fontSize: '100px' });
 				gameState.idkWhatToCallThisOne++;
 			}
 			if (gameState.cursors.right.isDown) {
